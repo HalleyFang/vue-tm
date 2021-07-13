@@ -6,11 +6,13 @@ import VueRouter from 'vue-router'
 import routes from './router'
 import 'font-awesome/css/font-awesome.min.css'
 import axios from "axios";
+import util from './util/util'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.prototype.axios = axios;
 Vue.config.productionTip = false
+Vue.prototype.$utilHelper = util;
 
 const router = new VueRouter({
   mode: 'history',

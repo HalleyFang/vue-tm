@@ -1,17 +1,17 @@
 <template>
-  <el-container>
-    <el-header>
+  <el-container class="container">
+    <el-header class="header">
       <el-row>
         <el-col :span="6" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
           {{ collapsed ? '' : sysName }}
         </el-col>
-        <el-col :span="10">
+        <el-col :span="16">
           <el-menu
               :default-active="activeIndex2"
               class="el-menu-demo"
               mode="horizontal"
               @select="handleSelect"
-              background-color="#545c64"
+              background-color="#20a0ff"
               text-color="#fff"
               active-text-color="#ffd04b">
             <el-menu-item index="1">我的工作台</el-menu-item>
@@ -33,9 +33,8 @@
             </el-submenu>
           </el-menu>
         </el-col>
-        <el-col :span="4" >
-          <span>aaa</span>
-          <el-dropdown trigger="click">
+        <el-col :span="2" >
+          <el-dropdown trigger="hover">
             <span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar"/> {{ sysUserName }}</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>我的消息</el-dropdown-item>
@@ -46,7 +45,7 @@
         </el-col>
       </el-row>
     </el-header>
-    <el-main>
+    <el-main class="main">
       <section class="content-container">
         <div class="grid-content bg-purple-light">
           <el-col :span="24" class="breadcrumb-container">
@@ -74,7 +73,7 @@ export default {
     return {
       sysName: 'TestManagement',
       collapsed: false,
-      sysUserName: '',
+      sysUserName: 'sysaaaaa',
       sysUserAvatar: '',
       form: {
         name: '',
@@ -207,73 +206,11 @@ export default {
   }
 
   .main {
-    display: flex;
-    // background: #324057;
-    position: absolute;
-    top: 60px;
-    bottom: 0px;
-    overflow: hidden;
 
-    aside {
-      flex: 0 0 230px;
-      width: 230px;
-      // position: absolute;
-      // top: 0px;
-      // bottom: 0px;
-      .el-menu {
-        height: 100%;
-      }
-
-      .collapsed {
-        width: 60px;
-
-        .item {
-          position: relative;
-        }
-
-        .submenu {
-          position: absolute;
-          top: 0px;
-          left: 60px;
-          z-index: 99999;
-          height: auto;
-          display: none;
-        }
-
-      }
-    }
-
-    .menu-collapsed {
-      flex: 0 0 60px;
-      width: 60px;
-    }
-
-    .menu-expanded {
-      flex: 0 0 230px;
-      width: 230px;
-    }
-
-    .content-container {
-      // background: #f1f2f7;
-      flex: 1;
-      // position: absolute;
-      // right: 0px;
-      // top: 0px;
-      // bottom: 0px;
-      // left: 230px;
-      overflow-y: scroll;
-      padding: 20px;
 
       .breadcrumb-container {
-        //margin-bottom: 15px;
         .title {
-          width: 200px;
-          float: left;
-          color: #475669;
-        }
-
-        .breadcrumb-inner {
-          float: right;
+          display:none;
         }
       }
 
@@ -282,12 +219,6 @@ export default {
         box-sizing: border-box;
       }
     }
-  }
-}
 
-.breadcrumb-container {
-  .title {
-    display:none;
-  }
 }
 </style>
