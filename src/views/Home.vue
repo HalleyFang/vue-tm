@@ -7,17 +7,21 @@
         </el-col>
         <el-col :span="16">
           <el-menu
-              :default-active="activeIndex2"
+              :default-active="$route.path"
               class="el-menu-demo"
               mode="horizontal"
-              @select="handleSelect"
+              @open="handleopen"
+              @close="handleclose"
+              @select="handleselect"
               background-color="#20a0ff"
               text-color="#fff"
-              active-text-color="#ffd04b">
+              active-text-color="#ffd04b"
+              unique-opened
+              router>
             <el-menu-item index="1">我的工作台</el-menu-item>
             <el-submenu index="2">
               <template slot="title">用例管理</template>
-              <el-menu-item index="2-1">基线库</el-menu-item>
+              <el-menu-item index="caseTree" >基线库</el-menu-item>
               <el-menu-item index="2-2">用例评审</el-menu-item>
               <el-menu-item index="2-3">用例归档</el-menu-item>
             </el-submenu>

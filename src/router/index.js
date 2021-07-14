@@ -19,10 +19,10 @@ let routes = [
     {
         path: '/',
         component: Home,
-        name: 'caseM',
+        name: 'CaseManagement',
         iconCls: 'el-icon-message',
         children: [
-            { path: '/caseTree', component: CaseTree, name: 'cc', hidden: true }
+            { path: '/caseTree', component: CaseTree, name: 'CaseMaster', hidden: true }
             ]
     }/*,
     {

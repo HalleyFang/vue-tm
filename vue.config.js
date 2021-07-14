@@ -8,7 +8,7 @@ module.exports = {
         port: 8098,
         proxy: {
             '/api': {
-                target: 'http://127.0.0.1:12306', //源地址
+                target: 'http://127.0.0.1:8097', //源地址
                 changeOrigin: true, //改变源
                 pathRewrite: {
                     '^/api': '' //路径重写
