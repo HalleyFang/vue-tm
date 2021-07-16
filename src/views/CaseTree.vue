@@ -117,7 +117,7 @@ export default {
   data() {
     return {
       filterText: '',
-      treeData: '',
+      treeData: null,
       runParam: {},
       defaultProps: {
         children: 'children',
@@ -363,9 +363,6 @@ export default {
     this.refreshNode();
     this.rowDrop();
   },
-  props: {
-    value: Array
-  },
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val)
@@ -406,8 +403,7 @@ export default {
       deep: true
     }
   },
-  components: {
-  }
+  components: {}
 }
 </script>
 
