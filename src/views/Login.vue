@@ -50,18 +50,16 @@
             this.logining = true;
             //NProgress.start();
             var loginParams = { username: this.ruleForm2.account, password: this.ruleForm2.checkPass };
-            requestLogin(loginParams).then(data => {
+            requestLogin(loginParams).then((data) => {
               this.logining = false;
-              //NProgress.done();
-              let { msg, code, user } = data;
-              if (code !== 200) {
+              if (data.status !== 200) {
                 this.$message({
-                  message: msg,
+                  message: data.msg,
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(user));
-                this.$router.push({ path: '/table' });
+                sessionStorage.setItem('user', JSON.stringify(data.username));
+                this.$router.push({ path: '/caseTree' });
               }
             });
           } else {

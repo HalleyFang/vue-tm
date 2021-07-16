@@ -24,7 +24,7 @@
        <i v-if="node.status == 0" style="margin-left: 8px" class="el-icon-folder-add" @click="Append"></i>
      </el-tooltip>
       <el-tooltip class="item" effect="dark" content="新增文件" placement="top">
-       <i v-if="node.status == 0" style="margin-left: 8px" class="el-icon-document-add" @click="Append"></i>
+       <i v-if="node.status == 0" style="margin-left: 8px" class="el-icon-document-add" @click="AddFile"></i>
       </el-tooltip>
        <el-tooltip class="item" effect="dark" content="删除" placement="top">
        <i v-if="node.status == 0&&node.children.length < 1" style="margin-left: 8px" class="el-icon-delete" color="red"
@@ -62,6 +62,10 @@ export default {
     Append() {
       //添加节点事件
       this.$emit('Append')
+    },
+    AddFile() {
+      //添加节点事件
+      this.$emit('AddFile')
     },
     SaveEdit() {
       //保存节点事件

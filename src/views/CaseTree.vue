@@ -195,6 +195,15 @@ export default {
               isAdd: true
             })
           },
+          AddFile: () => {
+            node.expanded = true
+            data.children.push({
+              value: this.$utilHelper.generateUUID(),
+              label: '',
+              status: 1,
+              isAdd: true
+            })
+          },
           //删除节点
           Delete: (nodeData) => {
             //递归查找父节点
@@ -207,6 +216,18 @@ export default {
           SaveEdit: (nodeData) => {
             //递归查找父节点
             var parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
+            this.runParam.parentNode = parentNode
+            this.runParam.data = data
+            this.runParam.nodeData = nodeData
+          },
+          SaveFile: (nodeData) => {
+            //递归查找父节点
+            var parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
+            axios.post('/api/addFile',{parentNode,data,nodeData}).then(
+                () => {
+
+                }
+            )
             this.runParam.parentNode = parentNode
             this.runParam.data = data
             this.runParam.nodeData = nodeData
