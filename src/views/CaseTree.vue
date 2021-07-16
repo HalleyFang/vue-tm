@@ -159,7 +159,9 @@ export default {
     handleNodeClick(nodeData) {
       if (nodeData.status == -1) {
         this.isShowForm = true;
-        axios.get("/api/case")
+        axios.post("/api/case/query",null,{ params: {
+            caseId:nodeData.case_id
+          }})
             .then((response) => {
               console.log(response);
               this.form.data = JSON.parse(JSON.stringify(response.data));
@@ -299,7 +301,7 @@ export default {
       })
     },
     onSubmit: function () {
-      axios.post('/api/casesave', this.form.data)
+      axios.post('/api/case/update', this.form.data)
           .then((resp) => {
             if (resp.status == 200) {
               this.$message.success("保存成功");
