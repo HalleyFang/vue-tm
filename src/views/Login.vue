@@ -17,6 +17,7 @@
 
 <script>
   import { requestLogin } from '../api/api';
+  import {setCookie} from '../util/cookie';
   //import NProgress from 'nprogress'
   export default {
     data() {
@@ -58,7 +59,10 @@
                   type: 'error'
                 });
               } else {
-                sessionStorage.setItem('user', JSON.stringify(data.username));
+                setCookie('roles',data.roles);
+                localStorage.setItem('user', JSON.stringify(data.username));
+                localStorage.setItem("roles", data.roles);
+                localStorage.setItem("permissions", data.permissions);
                 this.$router.push({ path: '/caseTree' });
               }
             });

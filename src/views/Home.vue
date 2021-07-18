@@ -21,7 +21,7 @@
             <el-menu-item index="1">我的工作台</el-menu-item>
             <el-submenu index="2">
               <template slot="title">用例管理</template>
-              <el-menu-item index="caseTree" >基线库</el-menu-item>
+              <el-menu-item index="caseTree">基线库</el-menu-item>
               <el-menu-item index="2-2">用例评审</el-menu-item>
               <el-menu-item index="2-3">用例归档</el-menu-item>
             </el-submenu>
@@ -37,7 +37,7 @@
             </el-submenu>
           </el-menu>
         </el-col>
-        <el-col :span="2" >
+        <el-col :span="2">
           <el-dropdown trigger="hover">
             <span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar"/> {{ sysUserName }}</span>
             <el-dropdown-menu slot="dropdown">
@@ -72,12 +72,13 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
       sysName: 'TestManagement',
       collapsed: false,
-      sysUserName: 'sysaaaaa',
+      sysUserName: '',
       sysUserAvatar: '',
       form: {
         name: '',
@@ -126,11 +127,12 @@ export default {
     }
   },
   mounted() {
-    var user = sessionStorage.getItem('user');
+    var user = localStorage.getItem('user');
     if (user) {
+      console.log("uuu  " + user)
       user = JSON.parse(user);
-      this.sysUserName = user.name || '';
-      this.sysUserAvatar = user.avatar || '';
+      this.sysUserName = user || '';
+      this.sysUserAvatar = '/api/img/avatar.png' || '';
     }
 
   }
@@ -210,19 +212,17 @@ export default {
   }
 
   .main {
-
-
-      .breadcrumb-container {
-        .title {
-          display:none;
-        }
-      }
-
-      .content-wrapper {
-        background-color: #fff;
-        box-sizing: border-box;
+    .breadcrumb-container {
+      .title {
+        display: none;
       }
     }
+
+    .content-wrapper {
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+  }
 
 }
 </style>
