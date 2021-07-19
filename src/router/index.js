@@ -1,5 +1,6 @@
 import Login from '../views/Login.vue'
 import NotFound from '../views/404.vue'
+import MyTask from "@/views/MyTask";
 import CaseTree from "@/views/CaseTree";
 import Home from "@/views/Home";
 
@@ -15,6 +16,14 @@ let routes = [
         component: NotFound,
         name: '',
         hidden: true
+    },{
+        path: '/',
+        component: Home,
+        name: 'MyTask',
+        iconCls: 'el-icon-message',
+        children: [
+            { path: '/myTask', component: MyTask, name: 'MyTask', hidden: true }
+        ]
     },
     {
         path: '/',

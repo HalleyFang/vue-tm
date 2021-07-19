@@ -18,7 +18,7 @@
               active-text-color="#ffd04b"
               unique-opened
               router>
-            <el-menu-item index="1">我的工作台</el-menu-item>
+            <el-menu-item index="myTask">我的工作台</el-menu-item>
             <el-submenu index="2">
               <template slot="title">用例管理</template>
               <el-menu-item index="caseTree">基线库</el-menu-item>
@@ -55,7 +55,7 @@
           <el-col :span="24" class="breadcrumb-container">
             <strong class="title">{{ $route.name }}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
-              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path">
+              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path" style="background: cadetblue">
                 {{ item.name }}
               </el-breadcrumb-item>
             </el-breadcrumb>
@@ -222,6 +222,10 @@ export default {
     .content-wrapper {
       background-color: #fff;
       box-sizing: border-box;
+    }
+
+    .breadcrumb-inner{
+      margin-bottom: 5px;
     }
   }
 

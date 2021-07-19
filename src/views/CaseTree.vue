@@ -171,8 +171,10 @@ export default {
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
-      ).catch(() => {
-        this.$router.push('/login')
+      ).catch((resp) => {
+        if (resp.status == 405) {
+          this.$router.push('/login')
+        }
       })
     },
     handleNodeClick(nodeData) {
