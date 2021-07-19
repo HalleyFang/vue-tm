@@ -7,7 +7,8 @@
             placeholder="输入关键字进行过滤"
             v-model="filterText" style="padding-top: 10px" size="small">
         </el-input>
-        <div style="text-align: left">
+        <div style="display: flex;justify-content: space-between;margin-top: 5px">
+          <div>
           <el-tooltip class="item" effect="dark" content="添加根目录" placement="top">
             <el-button style="margin: 3px 0 3px 0;" size="small" type="primary" icon="el-icon-folder-add"
                        @click="addNode" circle>
@@ -17,6 +18,21 @@
             <el-button style="margin: 3px 0 3px 0;" size="small" type="primary" icon="el-icon-refresh"
                        @click="refreshNode" circle>
             </el-button>
+          </el-tooltip>
+          </div>
+          <el-tooltip class="item" effect="dark" content="导入" placement="top" style="margin-left: 10px">
+            <el-upload
+              class="upload"
+              action="/api/case/importExcel"
+              :on-preview="handlePreview"
+              :on-remove="handleRemove"
+              :before-remove="beforeRemove"
+              multiple
+              :limit="3"
+              :on-exceed="handleExceed"
+              :file-list="fileList">
+            <el-button size="small" type="primary">Excel用例导入</el-button>
+           </el-upload>
           </el-tooltip>
         </div>
         <el-tree
@@ -133,6 +149,7 @@ export default {
       modifyCount: 0,
       isModify: false,
       isShowForm: false,
+      fileList: []
     }
   },
   methods: {
@@ -154,7 +171,9 @@ export default {
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
-      )
+      ).catch(() => {
+        this.$router.push('/login')
+      })
     },
     handleNodeClick(nodeData) {
       if (nodeData.status == -1) {
@@ -380,6 +399,18 @@ export default {
     },
     allowDrag(draggingNode) {
       return draggingNode.data.label.indexOf('三级 3-2-2') === -1;
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePreview(file) {
+      console.log(file);
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    beforeRemove(file) {
+      return this.$confirm(`确定移除 ${ file.name }？`);
     }
   },
   mounted() {

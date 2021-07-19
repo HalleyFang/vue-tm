@@ -111,6 +111,7 @@ export default {
         //type: 'warning'
       }).then(() => {
         sessionStorage.removeItem('user');
+        localStorage.removeItem('user');
         _this.$router.push('/login');
       }).catch(() => {
 
