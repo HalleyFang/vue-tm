@@ -171,10 +171,8 @@ export default {
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
-      ).catch((resp) => {
-        if (resp.status == 405) {
+      ).catch(() => {
           this.$router.push('/login')
-        }
       })
     },
     handleNodeClick(nodeData) {
@@ -246,7 +244,7 @@ export default {
           SaveFile: (nodeData) => {
             //递归查找父节点
             var parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
-            axios.post('/api/addFile',{parentNode,data,nodeData}).then(
+            axios.post('/api/case/add',{parentNode,data,nodeData}).then(
                 () => {
 
                 }
@@ -332,7 +330,7 @@ export default {
           });
     },
     onDelete: function () {
-      axios.post('/api/casedelete', this.form.data.case_id)
+      axios.post('/api/case/delete', this.form.data.case_id)
           .then((resp) => {
             if (resp.status == 200) {
               this.$message.success("删除成功");

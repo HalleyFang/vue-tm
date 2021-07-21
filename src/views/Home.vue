@@ -5,7 +5,7 @@
         <el-col :span="6" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
           {{ collapsed ? '' : sysName }}
         </el-col>
-        <el-col :span="16">
+        <el-col :span="14">
           <el-menu
               :default-active="$route.path"
               class="el-menu-demo"
@@ -38,14 +38,34 @@
           </el-menu>
         </el-col>
         <el-col :span="2">
+          <el-select
+              v-model="isV"
+              placeholder="请选择版本"
+              size="small"
+              @change="switchVersion"
+          >
+            <el-option
+                label="v1"
+                value="v1"
+            ></el-option>
+            <el-option
+                label="v2"
+                value="v2"
+            ></el-option>
+          </el-select>
+        </el-col>
+        <el-col :span="2">
+          <div style="margin-top: 10px">
+            <el-avatar :src="this.sysUserAvatar"></el-avatar>
           <el-dropdown trigger="hover">
-            <span class="el-dropdown-link userinfo-inner"><img :src="this.sysUserAvatar"/> {{ sysUserName }}</span>
+            <span class="el-dropdown-link userinfo-inner"> {{ sysUserName }}</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>我的消息</el-dropdown-item>
               <el-dropdown-item>设置</el-dropdown-item>
               <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
+          </div>
         </el-col>
       </el-row>
     </el-header>
@@ -55,7 +75,7 @@
           <el-col :span="24" class="breadcrumb-container">
             <strong class="title">{{ $route.name }}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
-              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path" style="background: cadetblue">
+              <el-breadcrumb-item v-for="item in $route.matched" :key="item.path" style="background: gainsboro">
                 {{ item.name }}
               </el-breadcrumb-item>
             </el-breadcrumb>
@@ -73,6 +93,8 @@
 
 <script>
 
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -89,7 +111,8 @@ export default {
         type: [],
         resource: '',
         desc: ''
-      }
+      },
+      isV:''
     }
   },
   methods: {
@@ -125,6 +148,26 @@ export default {
     },
     showMenu(i, status) {
       this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
+    },
+    switchVersion(){
+      const params = new URLSearchParams();
+      params.append('value',this.isV);
+      axios.post('/api/userConf/setV',params).then(
+          (resp) => {
+            if(resp){
+              location.reload();
+              this.$router.go(0)
+            }
+          }
+      );
+    },
+    getVersion(){
+      axios.get('/api/userConf/getV').then(
+          (resp) => {
+            this.isV = resp.data;
+          }
+      )
+
     }
   },
   mounted() {
@@ -135,7 +178,7 @@ export default {
       this.sysUserName = user || '';
       this.sysUserAvatar = '/api/img/avatar.png' || '';
     }
-
+    this.getVersion();
   }
 }
 
