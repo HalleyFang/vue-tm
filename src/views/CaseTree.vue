@@ -241,7 +241,7 @@ export default {
             let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
             let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
             let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
-            axios.post('/api/tree/add', {parentNode, preNode, postNode}).then(
+            axios.post('/api/tree/add', {data,parentNode, preNode, postNode}).then(
                 (resp) => {
                   if(resp.data.status == 200){this.$message({
                     message: '新增目录成功',
@@ -258,7 +258,7 @@ export default {
             let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode;
             let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
             let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
-            axios.post('/api/case/add', {parentNode, preNode, postNode}).then(
+            axios.post('/api/case/add', {data,parentNode, preNode, postNode}).then(
                 (resp) => {
                   if(resp.data.status == 200){this.$message({
                     message: '新增用例成功',
