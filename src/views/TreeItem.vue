@@ -1,15 +1,25 @@
 <template>
   <span class="span_item">
     <span @click="Expanded">
-      <el-input v-if="node.status == 1" style="width: 200px;margin: 2px;" placeholder="请输入模块名称" v-model="node.label"
+      <el-input v-if="node.status == 1 || node.status == 2" style="width: 200px;margin: 2px;" placeholder="请输入模块名称" v-model="node.label"
                 size="mini" maxlength="50">
       </el-input>
-      <span v-if="node.status != 1">{{ node.label }}</span>
+      <span v-if="node.status != 1 && node.status != 2"><i :class="node.icon"></i>{{ node.label }}</span>
     </span>
     <span v-if="node.status == 1">
                 <el-tooltip class="item" effect="dark" content="保存" placement="top">
       <i style="margin-left: 8px;" class="el-icon-circle-check"
          @click="SaveEdit"></i>
+                </el-tooltip>
+                <el-tooltip class="item" effect="dark" content="关闭" placement="top">
+      <i style="margin-left: 8px;" class="el-icon-circle-close"
+         @click="CancelEdit"></i>
+                </el-tooltip>
+    </span>
+    <span v-if="node.status == 2">
+                <el-tooltip class="item" effect="dark" content="保存" placement="top">
+      <i style="margin-left: 8px;" class="el-icon-circle-check"
+         @click="SaveFile"></i>
                 </el-tooltip>
                 <el-tooltip class="item" effect="dark" content="关闭" placement="top">
       <i style="margin-left: 8px;" class="el-icon-circle-close"
@@ -66,6 +76,11 @@ export default {
     AddFile() {
       //添加节点事件
       this.$emit('AddFile')
+    },
+    SaveFile() {
+      //保存节点事件
+      this.$emit('SaveFile', this.nodeData);
+      this.node.status = -1
     },
     SaveEdit() {
       //保存节点事件

@@ -9,30 +9,30 @@
         </el-input>
         <div style="display: flex;justify-content: space-between;margin-top: 5px">
           <div>
-          <el-tooltip class="item" effect="dark" content="添加根目录" placement="top">
-            <el-button style="margin: 3px 0 3px 0;" size="small" type="primary" icon="el-icon-folder-add"
-                       @click="addNode" circle>
-            </el-button>
-          </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="刷新" placement="top" style="margin-left: 10px">
-            <el-button style="margin: 3px 0 3px 0;" size="small" type="primary" icon="el-icon-refresh"
-                       @click="refreshNode" circle>
-            </el-button>
-          </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="添加根目录" placement="top">
+              <el-button style="margin: 3px 0 3px 0;" size="small" type="primary" icon="el-icon-folder-add"
+                         @click="addNode" circle>
+              </el-button>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="刷新" placement="top" style="margin-left: 10px">
+              <el-button style="margin: 3px 0 3px 0;" size="small" type="primary" icon="el-icon-refresh"
+                         @click="refreshNode" circle>
+              </el-button>
+            </el-tooltip>
           </div>
           <el-tooltip class="item" effect="dark" content="导入" placement="top" style="margin-left: 10px">
             <el-upload
-              class="upload"
-              action="/api/case/importExcel"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :before-remove="beforeRemove"
-              multiple
-              :limit="3"
-              :on-exceed="handleExceed"
-              :file-list="fileList">
-            <el-button size="small" type="primary">Excel用例导入</el-button>
-           </el-upload>
+                class="upload"
+                action="/api/case/importExcel"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                multiple
+                :limit="3"
+                :on-exceed="handleExceed"
+                :file-list="fileList">
+              <el-button size="small" type="primary">Excel用例导入</el-button>
+            </el-upload>
           </el-tooltip>
         </div>
         <el-tree
@@ -172,15 +172,17 @@ export default {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-          this.$router.push('/login')
+        this.$router.push('/login')
       })
     },
     handleNodeClick(nodeData) {
       if (nodeData.status == -1) {
         this.isShowForm = true;
-        axios.post("/api/case/query",null,{ params: {
-            caseId:nodeData.case_id
-          }})
+        axios.post("/api/case/query", null, {
+          params: {
+            caseId: nodeData.case_id
+          }
+        })
             .then((response) => {
               console.log(response);
               this.form.data = JSON.parse(JSON.stringify(response.data));
@@ -221,7 +223,7 @@ export default {
             data.children.push({
               value: this.$utilHelper.generateUUID(),
               label: '',
-              status: 1,
+              status: 2,
               isAdd: true
             })
           },
@@ -236,17 +238,32 @@ export default {
           //保存节点
           SaveEdit: (nodeData) => {
             //递归查找父节点
-            var parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
+            let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
+            let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
+            let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
+            axios.post('/api/tree/add', {parentNode, preNode, postNode}).then(
+                (resp) => {
+                  if(resp.data.status == 200){this.$message({
+                    message: '新增目录成功',
+                    type: 'success'
+                  })}
+                }
+            )
             this.runParam.parentNode = parentNode
             this.runParam.data = data
             this.runParam.nodeData = nodeData
           },
           SaveFile: (nodeData) => {
             //递归查找父节点
-            var parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
-            axios.post('/api/case/add',{parentNode,data,nodeData}).then(
-                () => {
-
+            let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode;
+            let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
+            let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
+            axios.post('/api/case/add', {parentNode, preNode, postNode}).then(
+                (resp) => {
+                  if(resp.data.status == 200){this.$message({
+                    message: '新增用例成功',
+                    type: 'success'
+                  })}
                 }
             )
             this.runParam.parentNode = parentNode
@@ -410,7 +427,7 @@ export default {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
     },
     beforeRemove(file) {
-      return this.$confirm(`确定移除 ${ file.name }？`);
+      return this.$confirm(`确定移除 ${file.name}？`);
     }
   },
   mounted() {
@@ -467,7 +484,26 @@ export default {
   background: #c0ccda !important;
 }
 
-.el-icon-caret-right:before{
+.el-icon-caret-right:before {
   color: cornflowerblue;
+}
+</style>
+
+<style lang="scss">
+.el-tree .el-tree-node__expand-icon.expanded {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.el-tree .el-icon-caret-right:before {
+  content: "\e723";
+}
+
+.el-tree .el-tree-node__expand-icon.expanded.el-icon-caret-right:before {
+  content: "\e722";
+}
+
+.el-tree .is-leaf.el-tree-node__expand-icon.el-icon-caret-right:before {
+  display: none;
 }
 </style>

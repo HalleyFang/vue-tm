@@ -1,6 +1,9 @@
+
 export default {
     parentNode: null,
     node: null,
+    preNode:null,
+    postNode:null,
     generateUUID: function () {
         var d = new Date().getTime();
         var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
@@ -13,6 +16,8 @@ export default {
     getNode: function (tree, nodeId) {
         this.parentNode = null
         this.node = null
+        this.preNode = null
+        this.postNode = null
         var searchNode = this.searchNode(tree, nodeId, null);
         if (!searchNode.parentNode) {
             searchNode.parentNode = {
@@ -35,7 +40,22 @@ export default {
             }
             if (obj.value == nodeId) {
                 this.node = obj;
-                this.parentNode = parentNode
+                this.parentNode = parentNode;
+                if(tree.length>1){
+                    if(i==0){
+                        this.preNode = null;
+                        this.postNode = tree[1];
+                    }else if(i==tree.length-1){
+                        this.preNode = tree[tree.length-2];
+                        this.postNode = null;
+                    }else {
+                        this.preNode = tree[i-1];
+                        this.postNode = tree[i+1];
+                    }
+                }else {
+                    this.preNode = null;
+                    this.postNode = null;
+                }
                 break;
             } else {
                 if (obj.children && obj.children.length > 0) {
@@ -47,7 +67,9 @@ export default {
         }
         return {
             parentNode: this.parentNode,
-            node: this.node
+            node: this.node,
+            preNode: this.preNode,
+            postNode: this.postNode
         }
 
     },

@@ -57,8 +57,8 @@
         <el-col :span="2">
           <div style="margin-top: 10px">
             <el-avatar :src="this.sysUserAvatar"></el-avatar>
-          <el-dropdown trigger="hover">
-            <span class="el-dropdown-link userinfo-inner"> {{ sysUserName }}</span>
+          <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
+            <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{ sysUserName }}</span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>我的消息</el-dropdown-item>
               <el-dropdown-item>设置</el-dropdown-item>
@@ -176,7 +176,7 @@ export default {
       console.log("uuu  " + user)
       user = JSON.parse(user);
       this.sysUserName = user || '';
-      this.sysUserAvatar = '/api/img/avatar.png' || '';
+      this.sysUserAvatar = '/api/avatar' || '';
     }
     this.getVersion();
   }
