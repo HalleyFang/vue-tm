@@ -35,7 +35,7 @@ export default {
                 break;
             }
             var obj = tree[i];
-            if (!obj || !obj.value) {
+            if (!obj) {
                 continue;
             }
             if (obj.value == nodeId) {

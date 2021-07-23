@@ -176,9 +176,9 @@ export default {
       })
     },
     handleNodeClick(nodeData) {
-      if (nodeData.status == -1) {
+      if (nodeData.status == -1 && nodeData.case_id) {
         this.isShowForm = true;
-        axios.post("/api/case/query", null, {
+        axios.post("/api/case/queryById", null, {
           params: {
             caseId: nodeData.case_id
           }
@@ -228,12 +228,30 @@ export default {
             })
           },
           //删除节点
-          Delete: (nodeData) => {
+          Delete: () => {
             //递归查找父节点
-            var parentNode = this.$utilHelper.clearTable(this.treeData, data.value).parentNode
-            this.runParam.parentNode = parentNode
+            axios.post('/api/tree/delete', null,{
+              params: {
+                id: data.id
+              }
+            }).then(
+                (resp) => {
+                  if(resp.status == 200){
+                    this.$message({
+                      message: '删除目录成功',
+                      type: 'success'
+                    });
+                    axios.get('/api/tree').then(
+                        (res) => {
+                          this.treeData = JSON.parse(JSON.stringify(res.data));
+                        }
+                    ).catch(() => {
+                      this.$router.push('/login')
+                    })
+                  }
+                }
+            )
             this.runParam.data = data
-            this.runParam.nodeData = nodeData
           },
           //保存节点
           SaveEdit: (nodeData) => {
@@ -243,10 +261,19 @@ export default {
             let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
             axios.post('/api/tree/add', {data,parentNode, preNode, postNode}).then(
                 (resp) => {
-                  if(resp.data.status == 200){this.$message({
+                  if(resp.status == 200){
+                    this.$message({
                     message: '新增目录成功',
                     type: 'success'
-                  })}
+                  });
+                    axios.get('/api/tree').then(
+                        (res) => {
+                          this.treeData = JSON.parse(JSON.stringify(res.data));
+                        }
+                    ).catch(() => {
+                      this.$router.push('/login')
+                    })
+                  }
                 }
             )
             this.runParam.parentNode = parentNode
@@ -260,10 +287,25 @@ export default {
             let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
             axios.post('/api/case/add', {data,parentNode, preNode, postNode}).then(
                 (resp) => {
-                  if(resp.data.status == 200){this.$message({
+                  if(resp.status == 200){this.$message({
                     message: '新增用例成功',
                     type: 'success'
                   })}
+                  this.isShowForm = true;
+                  axios.post("/api/case/queryByName", null, {
+                    params: {
+                      caseName: data.label
+                    }
+                  })
+                      .then((response) => {
+                        console.log(response);
+                        this.form.data = JSON.parse(JSON.stringify(response.data));
+                        this.ruleForm.evidenceTemplateList = eval(this.form.data.case_step);
+                        console.log(this.ruleForm.evidenceTemplateList);
+                      });
+                  if (this.ruleForm.evidenceTemplateList.length == 0) {
+                    this.addTableItem();
+                  }
                 }
             )
             this.runParam.parentNode = parentNode
@@ -347,10 +389,22 @@ export default {
           });
     },
     onDelete: function () {
-      axios.post('/api/case/delete', this.form.data.case_id)
+      axios.post('/api/case/delete', null, {
+        params: {
+        caseId: this.form.data.case_id
+      }
+      })
           .then((resp) => {
             if (resp.status == 200) {
               this.$message.success("删除成功");
+              this.isShowForm=false;
+              axios.get('/api/tree').then(
+                  (res) => {
+                    this.treeData = JSON.parse(JSON.stringify(res.data));
+                  }
+              ).catch(() => {
+                this.$router.push('/login')
+              })
             } else {
               this.$message.error("删除失败");
             }
