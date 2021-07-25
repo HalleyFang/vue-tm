@@ -78,25 +78,22 @@
     </el-dialog>
 
     <!--新增界面-->
-    <el-dialog title="新增" v-model="addFormVisible" :close-on-click-modal="false">
+    <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" :rules="addFormRules" ref="addForm">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="addForm.name" auto-complete="off"></el-input>
+        <el-form-item label="ID" prop="id">
+          <el-input v-model="addForm.id" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="性别">
-          <el-radio-group v-model="addForm.sex">
-            <el-radio class="radio" :label="1">男</el-radio>
-            <el-radio class="radio" :label="0">女</el-radio>
-          </el-radio-group>
+        <el-form-item label="名称" prop="label">
+          <el-input v-model="addForm.label" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="年龄">
-          <el-input-number v-model="addForm.age" :min="0" :max="200"></el-input-number>
+        <el-form-item label="责任人" prop="executor">
+          <el-input v-model="addForm.executor" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="生日">
-          <el-date-picker type="date" placeholder="选择日期" v-model="addForm.birth"></el-date-picker>
+        <el-form-item label="开始时间">
+          <el-date-picker type="date"  value-format="yyyy-MM-dd" placeholder="选择日期" v-model="addForm.startTime"></el-date-picker>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input type="textarea" v-model="addForm.addr"></el-input>
+        <el-form-item label="结束时间">
+          <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期" v-model="addForm.endTime"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -116,7 +113,8 @@ export default {
   data() {
     return {
       filters: {
-        name: ''
+        id:'',
+        label: ''
       },
       users: [],
       total: 0,
@@ -150,11 +148,11 @@ export default {
       },
       //新增界面数据
       addForm: {
-        name: '',
-        sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
+        id:'',
+        label: '',
+        executor: '',
+        startTime: '',
+        endTime:''
       }
 
     }
@@ -189,12 +187,13 @@ export default {
     getTasks() {
       let para = {
         page: this.page,
-        name: this.filters.name
+        id:this.filters.id,
+        label: this.filters.label
       };
       this.listLoading = true;
       //NProgress.start();
       getTaskListPage(para).then((res) => {
-        this.total = res.data.total;
+        this.total = res.data.size;
         this.users = res.data.users;
         this.listLoading = false;
         //NProgress.done();
@@ -231,13 +230,6 @@ export default {
     //显示新增界面
     handleAdd: function () {
       this.addFormVisible = true;
-      this.addForm = {
-        name: '',
-        sex: -1,
-        age: 0,
-        birth: '',
-        addr: ''
-      };
     },
     //编辑
     editSubmit: function () {
@@ -271,7 +263,6 @@ export default {
             this.addLoading = true;
             //NProgress.start();
             let para = Object.assign({}, this.addForm);
-            para.birth = (!para.birth || para.birth == '') ? '' : util.formatDate.format(new Date(para.birth), 'yyyy-MM-dd');
             addTask(para).then(() => {
               this.addLoading = false;
               //NProgress.done();

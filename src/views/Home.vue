@@ -22,13 +22,13 @@
             <el-submenu index="2">
               <template slot="title">用例管理</template>
               <el-menu-item index="caseTree">基线库</el-menu-item>
-              <el-menu-item index="2-2">用例评审</el-menu-item>
-              <el-menu-item index="2-3">用例归档</el-menu-item>
+<!--              <el-menu-item index="2-2">用例评审</el-menu-item>
+              <el-menu-item index="2-3">用例归档</el-menu-item>-->
             </el-submenu>
             <el-submenu index="3">
-              <template slot="title">MileStone</template>
-              <el-menu-item index="3-1">MileStone管理</el-menu-item>
-              <el-menu-item index="3-2">MileStone测试</el-menu-item>
+              <template slot="title">测试管理</template>
+              <el-menu-item index="tasks">任务管理</el-menu-item>
+              <el-menu-item index="testing">测试执行</el-menu-item>
             </el-submenu>
             <el-submenu index="4">
               <template slot="title">测试报告</template>
