@@ -4,7 +4,6 @@ import MyTask from "@/views/MyTask";
 import CaseTree from "@/views/CaseTree";
 import Home from "@/views/Home";
 import Tasks from "../views/Tasks";
-import Testing from "../views/Testing";
 
 let routes = [
     {
@@ -41,8 +40,7 @@ let routes = [
         name: 'TaskManagement',
         iconCls: 'el-icon-message',
         children: [
-            { path: '/tasks', component: Tasks, name: 'Tasks', hidden: true },
-            { path: '/testing', component: Testing, name: 'Testing', hidden: true }
+            { path: '/tasks', component: Tasks, name: 'Tasks', hidden: true }
         ]
     }
     /*,
