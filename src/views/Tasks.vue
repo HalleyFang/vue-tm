@@ -70,6 +70,9 @@
           draggable
           show-checkbox
           >
+        <span slot-scope="{ node,data }">
+            <span><i :class="data.icon"></i>{{ node.label }}</span>
+        </span>
       </el-tree>
       <div slot="footer" class="dialog-footer">
         <el-button @click.native="caseFormVisible = false">取消</el-button>
@@ -245,9 +248,8 @@ export default {
       //NProgress.start();
       getTaskListPage(para).then((res) => {
         let array = res.data;
-        if (!array.length) {
-          this.tasks = []
-          this.tasks.push(array)
+        if (array.length==0) {
+          this.tasks = null;
         } else {
           this.tasks = array
         }
@@ -402,7 +404,12 @@ export default {
       });
     },
     addRouter(index,row){
-      this.$router.push('/testing?id='+row.id)
+      this.$router.push('testing/'+row.id)
+    }
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val)
     }
   },
   mounted() {
@@ -425,4 +432,23 @@ export default {
 }
 }*/
 
+</style>
+
+<style lang="scss">
+.el-tree .el-tree-node__expand-icon.expanded {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
+
+.el-tree .el-icon-caret-right:before {
+  content: "\e723";
+}
+
+.el-tree .el-tree-node__expand-icon.expanded.el-icon-caret-right:before {
+  content: "\e722";
+}
+
+.el-tree .is-leaf.el-tree-node__expand-icon.el-icon-caret-right:before {
+  display: none;
+}
 </style>

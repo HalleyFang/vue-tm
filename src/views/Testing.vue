@@ -17,16 +17,10 @@
             ref="tree"
             node-key="id"
             :expand-on-click-node="false"
-            :render-content="renderContent"
-            @node-drag-start="handleDragStart"
-            @node-drag-enter="handleDragEnter"
-            @node-drag-leave="handleDragLeave"
-            @node-drag-over="handleDragOver"
-            @node-drag-end="handleDragEnd"
-            @node-drop="handleDrop"
-            draggable
-            :allow-drop="allowDrop"
-            :allow-drag="allowDrag">
+            draggable>
+          <span class="custom-tree-node" slot-scope="{ node,data }">
+            <span><i :class="data.icon"></i>{{ node.label }}</span>
+          </span>
         </el-tree>
       </div>
     </el-aside>
@@ -34,9 +28,6 @@
       <el-header style="text-align: left; font-size: 12px;height: 48px;border-bottom: 1px solid #bbbbbb">
         <div style="padding-top: 10px;height: 99%">
           <el-button type="primary" @click="onSubmit" size="small" :disabled="!this.isModify">保存</el-button>
-          <el-popconfirm title="确定删除这条测试用例吗？" @confirm="onDelete" style="margin-left: 10px">
-            <el-button type="danger" size="small" slot="reference">删除</el-button>
-          </el-popconfirm>
         </div>
       </el-header>
       <el-main style="padding: 1px">
@@ -81,16 +72,34 @@
             </el-table>
           </el-form-item>
           <el-form-item label="备注" style="padding-right: 10px">
-            <!--            <textarea class="el-textarea__inner" rows="1" placeholder="请输入内容"></textarea>-->
             <el-input type="textarea" :rows="1" placeholder="请输入内容"
                       v-model="form.data.case_remark" :value="form.data.case_remark"></el-input>
           </el-form-item>
-          <!--          <el-form-item>
-                      <el-button type="primary" @click="onSubmit">保存</el-button>
-                    </el-form-item>-->
         </el-form>
+        <el-form :inline="true" :model="resultForm">
+          <el-form-item>
+            <i v-if="resultForm.status==0||!resultForm.status" class="el-icon-bell"></i>
+            <i v-if="resultForm.status==1" class="el-icon-success" style="color: green"></i>
+            <i v-if="resultForm.status==2" class="el-icon-error" style="color: red"></i>
+            <i v-if="resultForm.status==3" class="el-icon-warning" style="color: orange"></i>
+            <i v-if="resultForm.status==4" class="el-icon-s-help" style="color: blueviolet"></i>
+          </el-form-item>
+          <el-form-item>
+            <el-select label="执行结果" v-model="resultForm.status" placeholder="执行结果" size="small" style="width: 100px">
+              <el-option
+                  v-for="item in options"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmitResult" size="small">提交</el-button>
+          </el-form-item>
+        </el-form>
+
       </el-main>
-      <!--      </div>-->
     </el-container>
   </el-container>
 </template>
@@ -104,7 +113,7 @@ import Sortable from "sortablejs";
 export default {
   data() {
     return {
-      taskid:0,
+      taskId: 0,
       filterText: '',
       treeData: null,
       runParam: {},
@@ -122,10 +131,33 @@ export default {
       modifyCount: 0,
       isModify: false,
       isShowForm: false,
-      fileList: []
+      fileList: [],
+      resultForm: {
+        status: ''
+      },
+      options: [{
+        value: 0,
+        label: '未执行'
+      }, {
+        value: 1,
+        label: '成功'
+      }, {
+        value: 2,
+        label: '失败'
+      }, {
+        value: 3,
+        label: '跳过'
+      }, {
+        value: 4,
+        label: '阻塞'
+      }],
+      caseId:''
     }
   },
   methods: {
+    getId() {
+      this.taskId = this.$route.params && this.$route.params.id
+    },
     filterNode(value, data) {
       if (!value) return true
       return data.label.indexOf(value) !== -1
@@ -133,6 +165,7 @@ export default {
     handleNodeClick(nodeData) {
       if (nodeData.status == -1 && nodeData.case_id) {
         this.isShowForm = true;
+        this.caseId = nodeData.case_id;
         axios.post("/api/case/queryById", null, {
           params: {
             caseId: nodeData.case_id
@@ -144,6 +177,18 @@ export default {
               this.ruleForm.evidenceTemplateList = eval(this.form.data.case_step);
               console.log(this.ruleForm.evidenceTemplateList);
             });
+        axios.get("/api/taskCase/queryStatus", {
+          params: {
+            caseId: nodeData.case_id,
+            taskId: this.taskId
+          }
+        }).then(
+            (resp) => {
+              if (resp.status == 200) {
+                this.resultForm.status = resp.data.case_status;
+              }
+            }
+        )
         if (this.ruleForm.evidenceTemplateList.length == 0) {
           this.addTableItem();
         }
@@ -152,6 +197,18 @@ export default {
       }
       this.modifyCount = 0;
       this.isModify = false;
+    },
+    onSubmitResult() {
+      axios.post('/api/taskCase/update', {params: {result:this.resultForm,
+          caseId: this.caseId,
+          taskId: this.taskId}})
+          .then((resp) => {
+            if (resp.status == 200) {
+              this.$message.success("保存成功");
+            } else {
+              this.$message.error("保存失败");
+            }
+          });
     },
     onSubmit: function () {
       axios.post('/api/case/update', this.form.data)
@@ -197,7 +254,8 @@ export default {
       })
     },
     refreshNode() {
-      axios.get('/api/tree/taskTreeCase',{params: {
+      axios.get('/api/tree/taskTreeCase', {
+        params: {
           taskId: this.taskId
         }
       }).then(
@@ -216,13 +274,70 @@ export default {
     }
   },
   mounted() {
-    this.taskid = this.getQueryString("taskId");
+    this.getId();
+    // this.taskId = this.getQueryString("taskId");
     this.refreshNode();
-  }
+  },
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val)
+    },
+    value: {
+      handler: function (val) {
+        this.treeData = val
+      },
+      deep: true
+    },
+    treeData: {
+      handler: function (val) {
+        this.$emit('input', val)
+      },
+      deep: true
+    },
+    label: {
+      handler: function (val) {
+        if (!val) return ''
+        if (val.length > 30) {
+          return val.slice(0, 30) + '...'
+        }
+        return val
+      }
+    },
+    form: {
+      handler(val) {
+        if (this.isShowForm) {
+          if (val) {
+            this.modifyCount++;
+          }
+          if (this.modifyCount > 1) {
+            this.isModify = true;
+          }
+        }
+        console.log("count" + this.modifyCount)
+      },
+      deep: true
+    }
+  },
+  components: {}
 }
 
 </script>
 
 <style scoped lang="scss">
+.el-tree .el-tree-node__expand-icon.expanded {
+  -webkit-transform: rotate(0deg);
+  transform: rotate(0deg);
+}
 
+.el-tree .el-icon-caret-right:before {
+  content: "\e723";
+}
+
+.el-tree .el-tree-node__expand-icon.expanded.el-icon-caret-right:before {
+  content: "\e722";
+}
+
+.el-tree .is-leaf.el-tree-node__expand-icon.el-icon-caret-right:before {
+  display: none;
+}
 </style>

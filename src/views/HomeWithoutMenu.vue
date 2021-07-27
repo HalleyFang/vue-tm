@@ -6,36 +6,7 @@
           {{ collapsed ? '' : sysName }}
         </el-col>
         <el-col :span="14">
-          <el-menu
-              :default-active="$route.path"
-              class="el-menu-demo"
-              mode="horizontal"
-              @open="handleopen"
-              @close="handleclose"
-              @select="handleselect"
-              background-color="#20a0ff"
-              text-color="#fff"
-              active-text-color="#ffd04b"
-              unique-opened
-              router>
-            <el-menu-item index="myTask">我的工作台</el-menu-item>
-            <el-submenu index="2">
-              <template slot="title">用例管理</template>
-              <el-menu-item index="caseTree">基线库</el-menu-item>
-<!--              <el-menu-item index="2-2">用例评审</el-menu-item>
-              <el-menu-item index="2-3">用例归档</el-menu-item>-->
-            </el-submenu>
-            <el-submenu index="3">
-              <template slot="title">测试管理</template>
-              <el-menu-item index="tasks">任务管理</el-menu-item>
-<!--              <el-menu-item index="testing">测试执行</el-menu-item>-->
-            </el-submenu>
-            <el-submenu index="4">
-              <template slot="title">测试报告</template>
-              <el-menu-item index="simpleReport">简要报告</el-menu-item>
-              <el-menu-item index="report">详细报告</el-menu-item>
-            </el-submenu>
-          </el-menu>
+          <el-link style="color: white" href="/myTask"><i class="el-icon-back" style="color: white;"></i>返回我的工作台</el-link>
         </el-col>
         <el-col :span="2">
           <el-select
@@ -57,14 +28,14 @@
         <el-col :span="2">
           <div style="margin-top: 10px">
             <el-avatar :src="this.sysUserAvatar"></el-avatar>
-          <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
-            <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{ sysUserName }}</span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>我的消息</el-dropdown-item>
-              <el-dropdown-item>设置</el-dropdown-item>
-              <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+            <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
+              <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{ sysUserName }}</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>我的消息</el-dropdown-item>
+                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </el-col>
       </el-row>

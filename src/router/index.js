@@ -4,6 +4,8 @@ import MyTask from "@/views/MyTask";
 import CaseTree from "@/views/CaseTree";
 import Home from "@/views/Home";
 import Tasks from "../views/Tasks";
+import Testing from "@/views/Testing";
+import HomeWithoutMenu from "@/views/HomeWithoutMenu";
 
 let routes = [
     {
@@ -42,13 +44,20 @@ let routes = [
         children: [
             { path: '/tasks', component: Tasks, name: 'Tasks', hidden: true }
         ]
-    }
-    /*,
+    }, {
+        path: '/',
+        component: HomeWithoutMenu,
+        name: 'CaseExecute',
+        iconCls: 'el-icon-message',
+        children: [
+            { path: '/testing/:id', component: Testing, name: 'Testing', hidden: true }
+        ]
+    },
     {
         path: '*',
         hidden: true,
         redirect: { path: '/404' }
-    }*/
+    }
     ];
 
 export default routes;

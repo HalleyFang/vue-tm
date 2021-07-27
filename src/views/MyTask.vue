@@ -100,11 +100,10 @@ export default {
       //NProgress.start();
       getTaskListByUser(para).then((res) => {
         let array = res.data;
-        if (!array.length) {
-          this.tasks = []
-          this.tasks.push(array)
+        if (array.length==0) {
+          this.tasks = null;
         } else {
-          this.tasks = array
+          this.tasks = array;
         }
         this.total = this.tasks.length;
         this.listLoading = false;
@@ -117,7 +116,7 @@ export default {
       this.sels = sels;
     },
     addRouter(index,row){
-      this.$router.push('/testing?id='+row.id)
+      this.$router.push('testing/'+row.id)
     }
   },
   mounted() {
