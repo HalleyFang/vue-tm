@@ -7,6 +7,7 @@ import routes from './router'
 import 'font-awesome/css/font-awesome.min.css'
 import axios from "axios";
 import util from './util/util'
+import moment from 'moment/moment'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
@@ -33,6 +34,11 @@ router.beforeEach((to, from, next) => {
   }
   next()
 })
+
+Vue.filter('moment', function (value, formatString) {
+  formatString = formatString || 'YYYY-MM-DD';
+  return moment(value).format(formatString);
+});
 
 new Vue({
   router,

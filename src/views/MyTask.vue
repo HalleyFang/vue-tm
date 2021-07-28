@@ -33,8 +33,10 @@
       <el-table-column prop="executor" label="责任人" width="100">
       </el-table-column>
       <el-table-column prop="start_date" label="开始时间" width="120" sortable>
+        <template slot-scope="scope">{{scope.row.start_date | moment}}</template>
       </el-table-column>
       <el-table-column prop="end_date" label="结束时间" width="120" sortable>
+        <template slot-scope="scope">{{scope.row.end_date | moment}}</template>
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">

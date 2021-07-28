@@ -38,8 +38,10 @@
       <el-table-column prop="executor" label="责任人" width="80">
       </el-table-column>
       <el-table-column prop="start_date" label="开始时间" width="120" sortable>
+        <template slot-scope="scope">{{scope.row.start_date | moment}}</template>
       </el-table-column>
       <el-table-column prop="end_date" label="结束时间" width="120" sortable>
+        <template slot-scope="scope">{{scope.row.end_date | moment}}</template>
       </el-table-column>
       <el-table-column label="操作" width="360">
         <template slot-scope="scope">
@@ -91,9 +93,6 @@
     <!--编辑界面-->
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" ref="editForm">
-        <el-form-item label="ID" prop="id" >
-          <el-input v-model="editForm.id" auto-complete="off" :disabled="true"></el-input>
-        </el-form-item>
         <el-form-item label="名称" prop="label">
           <el-input v-model="editForm.label" auto-complete="off"></el-input>
         </el-form-item>
@@ -128,9 +127,6 @@
     <!--新增界面-->
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" ref="addForm">
-        <el-form-item label="ID" prop="id">
-          <el-input v-model="addForm.id" auto-complete="off"></el-input>
-        </el-form-item>
         <el-form-item label="名称" prop="label">
           <el-input v-model="addForm.label" auto-complete="off"></el-input>
         </el-form-item>
@@ -178,7 +174,6 @@ export default {
       editLoading: false,
       //编辑界面数据
       editForm: {
-        id: '',
         label: '',
         ms: '',
         executor: '',
@@ -190,7 +185,6 @@ export default {
       addLoading: false,
       //新增界面数据
       addForm: {
-        id: '',
         label: '',
         executor: '',
         start_date: '',
