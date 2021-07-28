@@ -18,26 +18,34 @@
     <!--列表-->
     <el-table :data="tasks" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
               style="width: 100%;">
-      <el-table-column type="selection" width="55">
-      </el-table-column>
+<!--      <el-table-column type="selection" width="55">
+      </el-table-column>-->
       <el-table-column label="序号" type="index" width="60">
       </el-table-column>
       <el-table-column prop="id" label="ID" width="120" sortable>
       </el-table-column>
       <el-table-column prop="label" label="名称" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="status" label="状态" :formatter="taskStatus" width="120" sortable>
+      <el-table-column prop="ms" label="MileStone" width="120" sortable>
+      </el-table-column>
+      <el-table-column prop="case_count" label="用例数" width="120" sortable>
+      </el-table-column>
+      <el-table-column label="进度" width="120" >
+        <template slot-scope="scope">
+        <el-progress :percentage="scope.row.status"></el-progress>
+        </template>
       </el-table-column>
       <el-table-column prop="executor" label="责任人" width="100" sortable>
       </el-table-column>
-      <el-table-column prop="startTime" label="开始时间" width="120" sortable>
+      <el-table-column prop="start_date" label="开始时间" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="endTime" label="结束时间" width="120" sortable>
+      <el-table-column prop="end_date" label="结束时间" width="120" sortable>
       </el-table-column>
       <el-table-column label="操作" width="400">
         <template slot-scope="scope">
           <el-button size="small" @click="handleCase(scope.$index, scope.row)">关联用例</el-button>
-          <el-button size="small" @click="addRouter(scope.$index, scope.row)">执行测试</el-button>
+          <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试</el-button>
+          <el-button v-if="scope.row.case_count==0" size="small" @click="addRouter(scope.$index, scope.row)" disabled>执行测试</el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -65,7 +73,7 @@
           :filter-node-method="filterNode"
           ref="tree"
           node-key="id"
-          :expand-on-click-node="false"
+          :expand-on-click-node="true"
           :default-checked-keys="checkedKeys"
           draggable
           show-checkbox
@@ -89,8 +97,8 @@
         <el-form-item label="名称" prop="label">
           <el-input v-model="editForm.label" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="editForm.status" placeholder="请选择">
+        <el-form-item label="MileStone" prop="ms">
+          <el-select v-model="editForm.ms" placeholder="请选择">
             <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -104,11 +112,11 @@
         </el-form-item>
         <el-form-item label="开始时间">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
-                          v-model="editForm.startTime"></el-date-picker>
+                          v-model="editForm.start_date"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
-                          v-model="editForm.endTime"></el-date-picker>
+                          v-model="editForm.end_date"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -131,11 +139,11 @@
         </el-form-item>
         <el-form-item label="开始时间">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
-                          v-model="addForm.startTime"></el-date-picker>
+                          v-model="addForm.start_date"></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
-                          v-model="addForm.endTime"></el-date-picker>
+                          v-model="addForm.end_date"></el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -172,10 +180,10 @@ export default {
       editForm: {
         id: '',
         label: '',
-        status: '',
+        ms: '',
         executor: '',
-        startTime: '',
-        endTime: ''
+        start_date: '',
+        end_date: ''
       },
 
       addFormVisible: false,//新增界面是否显示
@@ -185,22 +193,10 @@ export default {
         id: '',
         label: '',
         executor: '',
-        startTime: '',
-        endTime: ''
+        start_date: '',
+        end_date: ''
       },
-      options: [{
-        value: 0,
-        label: '未开始'
-      }, {
-        value: 1,
-        label: '进行中'
-      }, {
-        value: 2,
-        label: '已完成'
-      }, {
-        value: 3,
-        label: '阻塞'
-      }],
+      options: [],
       filterText: '',
       treeData: null,
       runParam: {},
@@ -213,27 +209,6 @@ export default {
     }
   },
   methods: {
-    taskStatus: function (row) {
-      let showStatus = '';
-      switch (row.status) {
-        case 0:
-          showStatus = '未开始';
-          break;
-        case 1:
-          showStatus = '进行中';
-          break;
-        case 2:
-          showStatus = '已完成';
-          break;
-        case 3:
-          showStatus = '阻塞';
-          break;
-        default:
-          showStatus = '未知状态';
-          break;
-      }
-      return showStatus;
-    },
     handleCurrentChange(val) {
       this.page = val;
       this.getTasks();

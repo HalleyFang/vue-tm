@@ -16,10 +16,14 @@
             @node-click="handleNodeClick"
             ref="tree"
             node-key="id"
-            :expand-on-click-node="false"
+            :expand-on-click-node="true"
             draggable>
           <span class="custom-tree-node" slot-scope="{ node,data }">
-            <span><i :class="data.icon"></i>{{ node.label }}</span>
+            <span v-if="data.result==0 || !data.result"><i :class="data.icon"></i>{{ node.label }}</span>
+            <span v-if="data.result==1" style="background: greenyellow"><i :class="data.icon"></i>{{ node.label }}</span>
+            <span v-if="data.result==2" style="background: #F08080"><i :class="data.icon"></i>{{ node.label }}</span>
+            <span v-if="data.result==3" style="background: orange"><i :class="data.icon"></i>{{ node.label }}</span>
+            <span v-if="data.result==4" style="background: #9370D8"><i :class="data.icon"></i>{{ node.label }}</span>
           </span>
         </el-tree>
       </div>
