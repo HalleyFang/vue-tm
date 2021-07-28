@@ -19,24 +19,24 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="label" label="名称" width="120" sortable>
+      <el-table-column prop="label" label="名称" width="120" >
       </el-table-column>
-      <el-table-column prop="ms" label="MileStone" width="120" sortable>
+      <el-table-column prop="ms" label="MileStone" width="120" >
       </el-table-column>
-      <el-table-column prop="case_count" label="用例数" width="120" sortable>
+      <el-table-column prop="case_count" label="用例数" width="80" >
       </el-table-column>
       <el-table-column label="进度" width="120" >
         <template slot-scope="scope">
           <el-progress :percentage="scope.row.status"></el-progress>
         </template>
       </el-table-column>
-      <el-table-column prop="executor" label="责任人" width="100" sortable>
+      <el-table-column prop="executor" label="责任人" width="100">
       </el-table-column>
       <el-table-column prop="start_date" label="开始时间" width="120" sortable>
       </el-table-column>
       <el-table-column prop="end_date" label="结束时间" width="120" sortable>
       </el-table-column>
-      <el-table-column label="操作" width="300">
+      <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="small" @click="handleCase(scope.$index, scope.row)">关联用例</el-button>
           <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试</el-button>

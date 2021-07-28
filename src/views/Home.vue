@@ -2,10 +2,10 @@
   <el-container class="container">
     <el-header class="header">
       <el-row>
-        <el-col :span="6" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
+        <el-col :span="4" class="logo" :class="collapsed?'logo-collapse-width':'logo-width'">
           {{ collapsed ? '' : sysName }}
         </el-col>
-        <el-col :span="14">
+        <el-col :span="12">
           <el-menu
               :default-active="$route.path"
               class="el-menu-demo"
@@ -54,7 +54,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="2">
+        <el-col :span="4">
           <div style="margin-top: 10px">
             <el-avatar :src="this.sysUserAvatar"></el-avatar>
           <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
