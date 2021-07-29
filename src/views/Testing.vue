@@ -36,9 +36,14 @@
       </el-header>
       <el-main style="padding: 1px">
         <el-form ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:2px;width: 99%">
-          <el-form-item label="用例编号" style="padding-top: 10px;padding-right: 10px;width: auto">
-            <el-input v-model="form.data.case_id" :value="form.data.case_id" :disabled="true"></el-input>
-          </el-form-item>
+          <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
+            <el-form-item label="用例编号" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-input v-model="form.data.case_id" :value="form.data.case_id" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="作者" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-input v-model="form.data.create_user" :value="form.data.create_user" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form>
           <el-form-item label="用例标题" style="padding-right: 10px">
             <el-input v-model="form.data.case_name" :value="form.data.case_name"></el-input>
           </el-form-item>
@@ -79,6 +84,14 @@
             <el-input type="textarea" :rows="1" placeholder="请输入内容"
                       v-model="form.data.case_remark" :value="form.data.case_remark"></el-input>
           </el-form-item>
+          <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
+            <el-form-item label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :disabled="true"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="更新人" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-input v-model="form.data.update_user" :value="form.data.update_user" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form>
         </el-form>
         <el-form :inline="true" :model="resultForm">
           <el-form-item>

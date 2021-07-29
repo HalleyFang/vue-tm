@@ -30,7 +30,7 @@
           <el-progress :percentage="scope.row.status"></el-progress>
         </template>
       </el-table-column>
-      <el-table-column prop="executor" label="责任人" width="100">
+      <el-table-column prop="executor" label="责任人" width="120">
       </el-table-column>
       <el-table-column prop="start_date" label="开始时间" width="120" sortable>
         <template slot-scope="scope">{{scope.row.start_date | moment}}</template>

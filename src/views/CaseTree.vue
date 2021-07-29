@@ -69,9 +69,14 @@
       </el-header>
       <el-main style="padding: 1px">
         <el-form ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:2px;width: 99%">
-          <el-form-item label="用例编号" style="padding-top: 10px;padding-right: 10px;width: auto">
-            <el-input v-model="form.data.case_id" :value="form.data.case_id" :disabled="true"></el-input>
-          </el-form-item>
+          <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
+            <el-form-item label="用例编号" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-input v-model="form.data.case_id" :value="form.data.case_id" :disabled="true"></el-input>
+            </el-form-item>
+            <el-form-item label="作者" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-input v-model="form.data.create_user" :value="form.data.create_user" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form>
           <el-form-item label="用例标题" style="padding-right: 10px">
             <el-input v-model="form.data.case_name" :value="form.data.case_name"></el-input>
           </el-form-item>
@@ -116,6 +121,14 @@
           <!--          <el-form-item>
                       <el-button type="primary" @click="onSubmit">保存</el-button>
                     </el-form-item>-->
+          <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
+            <el-form-item label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :disabled="true"></el-date-picker>
+            </el-form-item>
+            <el-form-item label="更新人" style="padding-top: 10px;padding-right: 10px;width: auto">
+              <el-input v-model="form.data.update_user" :value="form.data.update_user" :disabled="true"></el-input>
+            </el-form-item>
+          </el-form>
         </el-form>
       </el-main>
       <!--      </div>-->
@@ -230,13 +243,13 @@ export default {
           //删除节点
           Delete: () => {
             //递归查找父节点
-            axios.post('/api/tree/delete', null,{
+            axios.post('/api/tree/delete', null, {
               params: {
                 id: data.id
               }
             }).then(
                 (resp) => {
-                  if(resp.status == 200){
+                  if (resp.status == 200) {
                     this.$message({
                       message: '删除目录成功',
                       type: 'success'
@@ -259,13 +272,13 @@ export default {
             let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
             let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
             let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
-            axios.post('/api/tree/add', {data,parentNode, preNode, postNode}).then(
+            axios.post('/api/tree/add', {data, parentNode, preNode, postNode}).then(
                 (resp) => {
-                  if(resp.status == 200){
+                  if (resp.status == 200) {
                     this.$message({
-                    message: '新增目录成功',
-                    type: 'success'
-                  });
+                      message: '新增目录成功',
+                      type: 'success'
+                    });
                     axios.get('/api/tree').then(
                         (res) => {
                           this.treeData = JSON.parse(JSON.stringify(res.data));
@@ -285,12 +298,14 @@ export default {
             let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode;
             let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
             let postNode = this.$utilHelper.getNode(this.treeData, data.value).postNode;
-            axios.post('/api/case/add', {data,parentNode, preNode, postNode}).then(
+            axios.post('/api/case/add', {data, parentNode, preNode, postNode}).then(
                 (resp) => {
-                  if(resp.status == 200){this.$message({
-                    message: '新增用例成功',
-                    type: 'success'
-                  })}
+                  if (resp.status == 200) {
+                    this.$message({
+                      message: '新增用例成功',
+                      type: 'success'
+                    })
+                  }
                   this.isShowForm = true;
                   axios.post("/api/case/queryByName", null, {
                     params: {
@@ -391,13 +406,13 @@ export default {
     onDelete: function () {
       axios.post('/api/case/delete', null, {
         params: {
-        caseId: this.form.data.case_id
-      }
+          caseId: this.form.data.case_id
+        }
       })
           .then((resp) => {
             if (resp.status == 200) {
               this.$message.success("删除成功");
-              this.isShowForm=false;
+              this.isShowForm = false;
               axios.get('/api/tree').then(
                   (res) => {
                     this.treeData = JSON.parse(JSON.stringify(res.data));
