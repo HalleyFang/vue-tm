@@ -9,6 +9,10 @@ import HomeWithoutMenu from "@/views/HomeWithoutMenu";
 
 let routes = [
     {
+        path: '/',
+        redirect: '/myTask'
+    },
+    {
         path: '/login',
         component: Login,
         name: '',
@@ -19,13 +23,13 @@ let routes = [
         component: NotFound,
         name: '',
         hidden: true
-    },{
+    }, {
         path: '/',
         component: Home,
         name: 'MyTask',
         iconCls: 'el-icon-message',
         children: [
-            { path: '/myTask', component: MyTask, name: 'MyTask', hidden: true }
+            {path: '/myTask', component: MyTask, name: 'MyTask', hidden: true}
         ]
     },
     {
@@ -34,15 +38,15 @@ let routes = [
         name: 'CaseManagement',
         iconCls: 'el-icon-message',
         children: [
-            { path: '/caseTree', component: CaseTree, name: 'CaseMaster', hidden: true }
-            ]
-    },{
+            {path: '/caseTree', component: CaseTree, name: 'CaseMaster', hidden: true}
+        ]
+    }, {
         path: '/',
         component: Home,
         name: 'TaskManagement',
         iconCls: 'el-icon-message',
         children: [
-            { path: '/tasks', component: Tasks, name: 'Tasks', hidden: true }
+            {path: '/tasks', component: Tasks, name: 'Tasks', hidden: true}
         ]
     }, {
         path: '/',
@@ -50,14 +54,14 @@ let routes = [
         name: 'CaseExecute',
         iconCls: 'el-icon-message',
         children: [
-            { path: '/testing/:id', component: Testing, name: 'Testing', hidden: true }
+            {path: '/testing/:id', component: Testing, name: 'Testing', hidden: true}
         ]
     },
     {
         path: '*',
         hidden: true,
-        redirect: { path: '/404' }
+        redirect: {path: '/404'}
     }
-    ];
+];
 
 export default routes;

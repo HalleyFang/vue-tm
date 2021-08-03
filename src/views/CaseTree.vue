@@ -30,7 +30,10 @@
                 multiple
                 :limit="3"
                 :on-exceed="handleExceed"
-                :file-list="fileList">
+                :on-success="handleSuccess"
+                :on-error="handleError"
+                :file-list="fileList"
+                :show-file-list="false">
               <el-button size="small" type="primary">Excel用例导入</el-button>
             </el-upload>
           </el-tooltip>
@@ -123,7 +126,9 @@
                     </el-form-item>-->
           <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
             <el-form-item label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
-              <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :disabled="true"></el-date-picker>
+              <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime"
+                              format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
+                              :disabled="true"></el-date-picker>
             </el-form-item>
             <el-form-item label="更新人" style="padding-top: 10px;padding-right: 10px;width: auto">
               <el-input v-model="form.data.update_user" :value="form.data.update_user" :disabled="true"></el-input>
@@ -180,12 +185,13 @@ export default {
       })
     },
     refreshNode() {
+      let vm = this;
       axios.get('/api/tree').then(
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-        this.$router.push('/login')
+        vm.$router.push('/login')
       })
     },
     handleNodeClick(nodeData) {
@@ -197,10 +203,10 @@ export default {
           }
         })
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               this.form.data = JSON.parse(JSON.stringify(response.data));
               this.ruleForm.evidenceTemplateList = eval(this.form.data.case_step);
-              console.log(this.ruleForm.evidenceTemplateList);
+              // console.log(this.ruleForm.evidenceTemplateList);
             });
         if (this.ruleForm.evidenceTemplateList.length == 0) {
           this.addTableItem();
@@ -242,6 +248,7 @@ export default {
           },
           //删除节点
           Delete: () => {
+            let vm = this;
             //递归查找父节点
             axios.post('/api/tree/delete', null, {
               params: {
@@ -259,7 +266,7 @@ export default {
                           this.treeData = JSON.parse(JSON.stringify(res.data));
                         }
                     ).catch(() => {
-                      this.$router.push('/login')
+                      vm.$router.push('/login')
                     })
                   }
                 }
@@ -268,6 +275,7 @@ export default {
           },
           //保存节点
           SaveEdit: (nodeData) => {
+            let vm = this;
             //递归查找父节点
             let parentNode = this.$utilHelper.getNode(this.treeData, data.value).parentNode
             let preNode = this.$utilHelper.getNode(this.treeData, data.value).preNode;
@@ -284,7 +292,7 @@ export default {
                           this.treeData = JSON.parse(JSON.stringify(res.data));
                         }
                     ).catch(() => {
-                      this.$router.push('/login')
+                      vm.$router.push('/login')
                     })
                   }
                 }
@@ -313,10 +321,10 @@ export default {
                     }
                   })
                       .then((response) => {
-                        console.log(response);
+                        // console.log(response);
                         this.form.data = JSON.parse(JSON.stringify(response.data));
                         this.ruleForm.evidenceTemplateList = eval(this.form.data.case_step);
-                        console.log(this.ruleForm.evidenceTemplateList);
+                        // console.log(this.ruleForm.evidenceTemplateList);
                       });
                   if (this.ruleForm.evidenceTemplateList.length == 0) {
                     this.addTableItem();
@@ -404,6 +412,7 @@ export default {
           });
     },
     onDelete: function () {
+      let vm = this;
       axios.post('/api/case/delete', null, {
         params: {
           caseId: this.form.data.case_id
@@ -418,7 +427,7 @@ export default {
                     this.treeData = JSON.parse(JSON.stringify(res.data));
                   }
               ).catch(() => {
-                this.$router.push('/login')
+                vm.$router.push('/login')
               })
             } else {
               this.$message.error("删除失败");
@@ -494,6 +503,12 @@ export default {
     },
     handleExceed(files, fileList) {
       this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    handleSuccess(response, file) {
+      this.$message.success("文件 " + file.name + " 导入成功")
+    },
+    handleError(err, file) {
+      this.$message.error("文件 " + file.name + " 导入失败")
     },
     beforeRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);

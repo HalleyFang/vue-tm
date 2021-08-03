@@ -6,7 +6,8 @@
           {{ collapsed ? '' : sysName }}
         </el-col>
         <el-col :span="14">
-          <el-link style="color: white" href="/myTask"><i class="el-icon-back" style="color: white;"></i>返回我的工作台</el-link>
+          <el-link style="color: white" href="/myTask"><i class="el-icon-back" style="color: white;"></i>返回我的工作台
+          </el-link>
         </el-col>
         <el-col :span="2">
           <el-select
@@ -29,7 +30,9 @@
           <div style="margin-top: 10px">
             <el-avatar :src="this.sysUserAvatar"></el-avatar>
             <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
-              <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{ sysUserName }}</span>
+              <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{
+                  sysUserName
+                }}</span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>我的消息</el-dropdown-item>
                 <el-dropdown-item>设置</el-dropdown-item>
@@ -83,12 +86,12 @@ export default {
         resource: '',
         desc: ''
       },
-      isV:''
+      isV: ''
     }
   },
   methods: {
     onSubmit() {
-      console.log('submit!');
+      // console.log('submit!');
     },
     handleopen() {
       //console.log('handleopen');
@@ -120,19 +123,19 @@ export default {
     showMenu(i, status) {
       this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
     },
-    switchVersion(){
+    switchVersion() {
       const params = new URLSearchParams();
-      params.append('value',this.isV);
-      axios.post('/api/userConf/setV',params).then(
+      params.append('value', this.isV);
+      axios.post('/api/userConf/setV', params).then(
           (resp) => {
-            if(resp){
+            if (resp) {
               location.reload();
               this.$router.go(0)
             }
           }
       );
     },
-    getVersion(){
+    getVersion() {
       axios.get('/api/userConf/getV').then(
           (resp) => {
             this.isV = resp.data;
@@ -144,7 +147,7 @@ export default {
   mounted() {
     var user = localStorage.getItem('user');
     if (user) {
-      console.log("uuu  " + user)
+      // console.log("uuu  " + user)
       user = JSON.parse(user);
       this.sysUserName = user || '';
       this.sysUserAvatar = '/api/avatar' || '';
@@ -238,7 +241,7 @@ export default {
       box-sizing: border-box;
     }
 
-    .breadcrumb-inner{
+    .breadcrumb-inner {
       margin-bottom: 5px;
     }
   }

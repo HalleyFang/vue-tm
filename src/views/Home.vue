@@ -18,22 +18,26 @@
               active-text-color="#ffd04b"
               unique-opened
               router>
-            <el-menu-item index="myTask">我的工作台</el-menu-item>
+
+            <el-submenu index="1">
+              <template slot="title">我的</template>
+              <el-menu-item index="/myTask">我的工作台</el-menu-item>
+            </el-submenu>
             <el-submenu index="2">
               <template slot="title">用例管理</template>
-              <el-menu-item index="caseTree">基线库</el-menu-item>
-<!--              <el-menu-item index="2-2">用例评审</el-menu-item>
-              <el-menu-item index="2-3">用例归档</el-menu-item>-->
+              <el-menu-item index="/caseTree">基线库</el-menu-item>
+              <!--              <el-menu-item index="2-2">用例评审</el-menu-item>
+                            <el-menu-item index="2-3">用例归档</el-menu-item>-->
             </el-submenu>
             <el-submenu index="3">
               <template slot="title">测试管理</template>
-              <el-menu-item index="tasks">任务管理</el-menu-item>
-<!--              <el-menu-item index="testing">测试执行</el-menu-item>-->
+              <el-menu-item index="/tasks">任务管理</el-menu-item>
+              <!--              <el-menu-item index="testing">测试执行</el-menu-item>-->
             </el-submenu>
             <el-submenu index="4">
               <template slot="title">测试报告</template>
-              <el-menu-item index="simpleReport">简要报告</el-menu-item>
-              <el-menu-item index="report">详细报告</el-menu-item>
+              <el-menu-item index="/simpleReport">简要报告</el-menu-item>
+              <el-menu-item index="/report">详细报告</el-menu-item>
             </el-submenu>
           </el-menu>
         </el-col>
@@ -57,14 +61,16 @@
         <el-col :span="4">
           <div style="margin-top: 10px">
             <el-avatar :src="this.sysUserAvatar"></el-avatar>
-          <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
-            <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{ sysUserName }}</span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>我的消息</el-dropdown-item>
-              <el-dropdown-item>设置</el-dropdown-item>
-              <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+            <el-dropdown trigger="hover" style="position: relative;bottom: 15px;margin-left: 5px">
+              <span class="el-dropdown-link userinfo-inner" style="font-size: large;color: white"> {{
+                  sysUserName
+                }}</span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>我的消息</el-dropdown-item>
+                <el-dropdown-item>设置</el-dropdown-item>
+                <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </el-col>
       </el-row>
@@ -112,12 +118,12 @@ export default {
         resource: '',
         desc: ''
       },
-      isV:''
+      isV: ''
     }
   },
   methods: {
     onSubmit() {
-      console.log('submit!');
+      // console.log('submit!');
     },
     handleopen() {
       //console.log('handleopen');
@@ -149,19 +155,19 @@ export default {
     showMenu(i, status) {
       this.$refs.menuCollapsed.getElementsByClassName('submenu-hook-' + i)[0].style.display = status ? 'block' : 'none';
     },
-    switchVersion(){
+    switchVersion() {
       const params = new URLSearchParams();
-      params.append('value',this.isV);
-      axios.post('/api/userConf/setV',params).then(
+      params.append('value', this.isV);
+      axios.post('/api/userConf/setV', params).then(
           (resp) => {
-            if(resp){
-              location.reload();
+            if (resp) {
+              // location.reload();
               this.$router.go(0)
             }
           }
       );
     },
-    getVersion(){
+    getVersion() {
       axios.get('/api/userConf/getV').then(
           (resp) => {
             this.isV = resp.data;
@@ -173,7 +179,7 @@ export default {
   mounted() {
     var user = localStorage.getItem('user');
     if (user) {
-      console.log("uuu  " + user)
+      // console.log("uuu  " + user)
       user = JSON.parse(user);
       this.sysUserName = user || '';
       this.sysUserAvatar = '/api/avatar' || '';
@@ -267,7 +273,7 @@ export default {
       box-sizing: border-box;
     }
 
-    .breadcrumb-inner{
+    .breadcrumb-inner {
       margin-bottom: 5px;
     }
   }

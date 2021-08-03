@@ -9,7 +9,7 @@ export function setCookie(key,value) {
 export function getCookie(param) {
     var c_param = '';
     if (document.cookie.length > 0) {
-        console.log("原document cookie： " + document.cookie);
+        // console.log("原document cookie： " + document.cookie);
         var arr = document.cookie.split('; '); //获取key value数组
         for (var i = 0; i < arr.length; i++) {
             var arr2 = arr[i].split('='); //获取该key 下面的 value数组

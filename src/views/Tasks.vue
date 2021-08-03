@@ -18,8 +18,8 @@
     <!--列表-->
     <el-table :data="tasks" highlight-current-row v-loading="listLoading" @selection-change="selsChange"
               style="width: 100%;">
-<!--      <el-table-column type="selection" width="55">
-      </el-table-column>-->
+      <!--      <el-table-column type="selection" width="55">
+            </el-table-column>-->
       <el-table-column label="序号" type="index" width="60">
       </el-table-column>
       <el-table-column prop="id" label="ID" width="60" sortable>
@@ -30,24 +30,27 @@
       </el-table-column>
       <el-table-column prop="case_count" label="用例数" width="80">
       </el-table-column>
-      <el-table-column label="进度" width="120" >
+      <el-table-column label="进度" width="120">
         <template slot-scope="scope">
-        <el-progress :percentage="scope.row.status"></el-progress>
+          <el-progress :percentage="scope.row.status"></el-progress>
         </template>
       </el-table-column>
       <el-table-column prop="executor" label="责任人" width="120">
       </el-table-column>
       <el-table-column prop="start_date" label="开始时间" width="120" sortable>
-        <template slot-scope="scope">{{scope.row.start_date | moment}}</template>
+        <template slot-scope="scope">{{ scope.row.start_date | moment }}</template>
       </el-table-column>
       <el-table-column prop="end_date" label="结束时间" width="120" sortable>
-        <template slot-scope="scope">{{scope.row.end_date | moment}}</template>
+        <template slot-scope="scope">{{ scope.row.end_date | moment }}</template>
       </el-table-column>
       <el-table-column label="操作" width="360">
         <template slot-scope="scope">
           <el-button size="small" @click="handleCase(scope.$index, scope.row)">关联用例</el-button>
-          <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试</el-button>
-          <el-button v-if="scope.row.case_count==0" size="small" @click="addRouter(scope.$index, scope.row)" disabled>执行测试</el-button>
+          <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试
+          </el-button>
+          <el-button v-if="scope.row.case_count==0" size="small" @click="addRouter(scope.$index, scope.row)" disabled>
+            执行测试
+          </el-button>
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
           <el-button type="danger" size="small" @click="handleDel(scope.$index, scope.row)">删除</el-button>
         </template>
@@ -79,7 +82,7 @@
           :default-checked-keys="checkedKeys"
           draggable
           show-checkbox
-          >
+      >
         <span slot-scope="{ node,data }">
             <span><i :class="data.icon"></i>{{ node.label }}</span>
         </span>
@@ -94,7 +97,7 @@
     <el-dialog title="编辑" :visible.sync="editFormVisible" :close-on-click-modal="false">
       <el-form :model="editForm" label-width="80px" ref="editForm">
         <el-form-item label="名称" prop="label">
-          <el-input v-model="editForm.label" auto-complete="off"></el-input>
+          <el-input v-model="editForm.label"></el-input>
         </el-form-item>
         <el-form-item label="MileStone" prop="ms">
           <el-select v-model="editForm.ms" placeholder="请选择">
@@ -107,7 +110,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="责任人" prop="executor">
-          <el-input v-model="editForm.executor" auto-complete="off"></el-input>
+          <el-select v-model="editForm.executor" placeholder="请选择">
+            <el-option
+                v-for="item in executors"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="开始时间">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
@@ -128,10 +138,17 @@
     <el-dialog title="新增" :visible.sync="addFormVisible" :close-on-click-modal="false">
       <el-form :model="addForm" label-width="80px" ref="addForm">
         <el-form-item label="名称" prop="label">
-          <el-input v-model="addForm.label" auto-complete="off"></el-input>
+          <el-input v-model="addForm.label"></el-input>
         </el-form-item>
         <el-form-item label="责任人" prop="executor">
-          <el-input v-model="addForm.executor" auto-complete="off"></el-input>
+          <el-select v-model="addForm.executor" placeholder="请选择">
+            <el-option
+                v-for="item in executors"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="开始时间">
           <el-date-picker type="date" value-format="yyyy-MM-dd" placeholder="选择日期"
@@ -153,6 +170,7 @@
 <script>
 import {getTaskListPage, removeTask, batchRemoveTask, editTask, addTask, caseTask} from '../api/api';
 import axios from "axios";
+import moment from "moment/moment";
 
 export default {
   data() {
@@ -166,9 +184,9 @@ export default {
       listLoading: false,
       sels: [],//列表选中列
 
-      caseFormVisible:false,
+      caseFormVisible: false,
       caseLoading: false,
-      caseForm:'',
+      caseForm: '',
 
       editFormVisible: false,//编辑界面是否显示
       editLoading: false,
@@ -191,6 +209,7 @@ export default {
         end_date: ''
       },
       options: [],
+      executors: [],
       filterText: '',
       treeData: null,
       runParam: {},
@@ -198,8 +217,8 @@ export default {
         children: 'children',
         label: 'label'
       },
-      taskId:0,
-      checkedKeys:[]
+      taskId: 0,
+      checkedKeys: []
     }
   },
   methods: {
@@ -217,7 +236,7 @@ export default {
       //NProgress.start();
       getTaskListPage(para).then((res) => {
         let array = res.data;
-        if (array.length==0) {
+        if (array.length == 0) {
           this.tasks = null;
         } else {
           this.tasks = array
@@ -251,42 +270,43 @@ export default {
       });
     },
     handleCase: function (index, row) {
+      let vm = this;
       this.caseFormVisible = true;
       this.taskId = row.id;
-      axios.get('/api/tree',{params:{taskId:this.taskId}}).then(
+      axios.get('/api/tree', {params: {taskId: this.taskId}}).then(
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-        this.$router.push('/login')
+        vm.$router.push('/login')
       });
-      axios.get('/api/tree/taskCaseChecked',{params:{taskId:this.taskId}}).then(
+      axios.get('/api/tree/taskCaseChecked', {params: {taskId: this.taskId}}).then(
           (res) => {
             this.checkedKeys = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-        this.$router.push('/login')
+        vm.$router.push('/login')
       });
 
     },
     //编辑
     caseSubmit: function () {
-          this.$confirm('确认提交吗？', '提示', {}).then(() => {
-            this.caseLoading = true;
-            let para = this.$refs.tree.getCheckedKeys();
-            let conf = {taskId:this.taskId};
-            //NProgress.start();
-            caseTask(para,conf).then(() => {
-              this.caseLoading = false;
-              //NProgress.done();
-              this.$message({
-                message: '提交成功',
-                type: 'success'
-              });
-              this.caseFormVisible = false;
-              this.getTasks();
-            });
+      this.$confirm('确认提交吗？', '提示', {}).then(() => {
+        this.caseLoading = true;
+        let para = this.$refs.tree.getCheckedKeys();
+        let conf = {taskId: this.taskId};
+        //NProgress.start();
+        caseTask(para, conf).then(() => {
+          this.caseLoading = false;
+          //NProgress.done();
+          this.$message({
+            message: '提交成功',
+            type: 'success'
           });
+          this.caseFormVisible = false;
+          this.getTasks();
+        });
+      });
     },
     filterNode(value, data) {
       if (!value) return true
@@ -295,6 +315,8 @@ export default {
     //显示编辑界面
     handleEdit: function (index, row) {
       this.editFormVisible = true;
+      row.start_date = moment(row.start_date).format("YYYY-MM-DD");
+      row.end_date = moment(row.end_date).format("YYYY-MM-DD");
       this.editForm = Object.assign({}, row);
     },
     //显示新增界面
@@ -372,8 +394,18 @@ export default {
 
       });
     },
-    addRouter(index,row){
-      this.$router.push('testing/'+row.id)
+    addRouter(index, row) {
+      this.$router.push('/testing/' + row.id)
+    },
+    getUsers() {
+      axios.get('/api/users').then(
+          (resp) => {
+            if (resp.status == 200) {
+              // console.log("users" + resp.data)
+              this.executors = JSON.parse(JSON.stringify(resp.data));
+            }
+          }
+      )
     }
   },
   watch: {
@@ -383,6 +415,7 @@ export default {
   },
   mounted() {
     this.getTasks();
+    this.getUsers();
   }
 }
 

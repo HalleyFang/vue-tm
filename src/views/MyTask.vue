@@ -19,13 +19,13 @@
       </el-table-column>
       <el-table-column prop="id" label="ID" width="120" sortable>
       </el-table-column>
-      <el-table-column prop="label" label="名称" width="120" >
+      <el-table-column prop="label" label="名称" width="120">
       </el-table-column>
-      <el-table-column prop="ms" label="MileStone" width="120" >
+      <el-table-column prop="ms" label="MileStone" width="120">
       </el-table-column>
-      <el-table-column prop="case_count" label="用例数" width="80" >
+      <el-table-column prop="case_count" label="用例数" width="80">
       </el-table-column>
-      <el-table-column label="进度" width="120" >
+      <el-table-column label="进度" width="120">
         <template slot-scope="scope">
           <el-progress :percentage="scope.row.status"></el-progress>
         </template>
@@ -33,16 +33,19 @@
       <el-table-column prop="executor" label="责任人" width="120">
       </el-table-column>
       <el-table-column prop="start_date" label="开始时间" width="120" sortable>
-        <template slot-scope="scope">{{scope.row.start_date | moment}}</template>
+        <template slot-scope="scope">{{ scope.row.start_date | moment }}</template>
       </el-table-column>
       <el-table-column prop="end_date" label="结束时间" width="120" sortable>
-        <template slot-scope="scope">{{scope.row.end_date | moment}}</template>
+        <template slot-scope="scope">{{ scope.row.end_date | moment }}</template>
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template slot-scope="scope">
           <el-button size="small" @click="handleCase(scope.$index, scope.row)">关联用例</el-button>
-          <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试</el-button>
-          <el-button v-if="scope.row.case_count==0" size="small" @click="addRouter(scope.$index, scope.row)" disabled>执行测试</el-button>
+          <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试
+          </el-button>
+          <el-button v-if="scope.row.case_count==0" size="small" @click="addRouter(scope.$index, scope.row)" disabled>
+            执行测试
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,9 +104,9 @@ export default {
       page: 1,
 
       listLoading: false,
-      caseFormVisible:false,
+      caseFormVisible: false,
       caseLoading: false,
-      caseForm:'',
+      caseForm: '',
 
       options: [],
       filterText: '',
@@ -113,8 +116,8 @@ export default {
         children: 'children',
         label: 'label'
       },
-      taskId:0,
-      checkedKeys:[]
+      taskId: 0,
+      checkedKeys: []
     }
   },
   methods: {
@@ -132,7 +135,7 @@ export default {
       //NProgress.start();
       getTaskListByUser(para).then((res) => {
         let array = res.data;
-        if (array.length==0) {
+        if (array.length == 0) {
           this.tasks = null;
         } else {
           this.tasks = array;
@@ -147,25 +150,26 @@ export default {
     selsChange: function (sels) {
       this.sels = sels;
     },
-    addRouter(index,row){
-      this.$router.push('testing/'+row.id)
+    addRouter(index, row) {
+      this.$router.push('/testing/' + row.id)
     },
     handleCase: function (index, row) {
+      let vm = this;
       this.caseFormVisible = true;
       this.taskId = row.id;
-      axios.get('/api/tree',{params:{taskId:this.taskId}}).then(
+      axios.get('/api/tree', {params: {taskId: this.taskId}}).then(
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-        this.$router.push('/login')
+        vm.$router.push('/login')
       });
-      axios.get('/api/tree/taskCaseChecked',{params:{taskId:this.taskId}}).then(
+      axios.get('/api/tree/taskCaseChecked', {params: {taskId: this.taskId}}).then(
           (res) => {
             this.checkedKeys = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-        this.$router.push('/login')
+        vm.$router.push('/login')
       });
 
     },

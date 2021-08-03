@@ -1,7 +1,8 @@
 <template>
   <span class="span_item">
     <span @click="Expanded">
-      <el-input v-if="node.status == 1 || node.status == 2" style="width: 200px;margin: 2px;" placeholder="请输入模块名称" v-model="node.label"
+      <el-input v-if="node.status == 1 || node.status == 2" style="width: 200px;margin: 2px;" placeholder="请输入模块名称"
+                v-model="node.label"
                 size="mini" maxlength="50">
       </el-input>
       <span v-if="node.status != 1 && node.status != 2"><i :class="node.icon"></i>{{ node.label }}</span>

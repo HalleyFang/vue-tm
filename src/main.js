@@ -16,31 +16,31 @@ Vue.config.productionTip = false
 Vue.prototype.$utilHelper = util;
 
 const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+    mode: 'history',
+    base: process.env.BASE_URL,
+    routes
 })
 
 router.beforeEach((to, from, next) => {
     if (to.path == '/login') {
-      sessionStorage.removeItem('user');
-      localStorage.removeItem('user');
-  }
-  let user = JSON.parse(localStorage.getItem('user'));
-  if (!user && to.path != '/login') {
-    next({ path: '/login' })
-  } else {
+        sessionStorage.removeItem('user');
+        localStorage.removeItem('user');
+    }
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (!user && to.path != '/login') {
+        next({path: '/login'})
+    } else {
+        next()
+    }
     next()
-  }
-  next()
 })
 
 Vue.filter('moment', function (value, formatString) {
-  formatString = formatString || 'YYYY-MM-DD';
-  return moment(value).format(formatString);
+    formatString = formatString || 'YYYY-MM-DD';
+    return moment(value).format(formatString);
 });
 
 new Vue({
-  router,
-  render: h => h(App),
+    router,
+    render: h => h(App),
 }).$mount('#app')

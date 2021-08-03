@@ -20,7 +20,9 @@
             draggable>
           <span class="custom-tree-node" slot-scope="{ node,data }">
             <span v-if="data.result==0 || !data.result"><i :class="data.icon"></i>{{ node.label }}</span>
-            <span v-if="data.result==1" style="background: greenyellow"><i :class="data.icon"></i>{{ node.label }}</span>
+            <span v-if="data.result==1" style="background: greenyellow"><i :class="data.icon"></i>{{
+                node.label
+              }}</span>
             <span v-if="data.result==2" style="background: #F08080"><i :class="data.icon"></i>{{ node.label }}</span>
             <span v-if="data.result==3" style="background: orange"><i :class="data.icon"></i>{{ node.label }}</span>
             <span v-if="data.result==4" style="background: #9370D8"><i :class="data.icon"></i>{{ node.label }}</span>
@@ -86,7 +88,9 @@
           </el-form-item>
           <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
             <el-form-item label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
-              <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime" format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss" :disabled="true"></el-date-picker>
+              <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime"
+                              format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
+                              :disabled="true"></el-date-picker>
             </el-form-item>
             <el-form-item label="更新人" style="padding-top: 10px;padding-right: 10px;width: auto">
               <el-input v-model="form.data.update_user" :value="form.data.update_user" :disabled="true"></el-input>
@@ -168,7 +172,7 @@ export default {
         value: 4,
         label: '阻塞'
       }],
-      caseId:''
+      caseId: ''
     }
   },
   methods: {
@@ -189,10 +193,10 @@ export default {
           }
         })
             .then((response) => {
-              console.log(response);
+              // console.log(response);
               this.form.data = JSON.parse(JSON.stringify(response.data));
               this.ruleForm.evidenceTemplateList = eval(this.form.data.case_step);
-              console.log(this.ruleForm.evidenceTemplateList);
+              // console.log(this.ruleForm.evidenceTemplateList);
             });
         axios.get("/api/taskCase/queryStatus", {
           params: {
@@ -216,9 +220,13 @@ export default {
       this.isModify = false;
     },
     onSubmitResult() {
-      axios.post('/api/taskCase/update', {params: {result:this.resultForm,
+      axios.post('/api/taskCase/update', {
+        params: {
+          result: this.resultForm,
           caseId: this.caseId,
-          taskId: this.taskId}})
+          taskId: this.taskId
+        }
+      })
           .then((resp) => {
             if (resp.status == 200) {
               this.$message.success("保存成功");
@@ -271,6 +279,7 @@ export default {
       })
     },
     refreshNode() {
+      let vm = this;
       axios.get('/api/tree/taskTreeCase', {
         params: {
           taskId: this.taskId
@@ -280,7 +289,7 @@ export default {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
       ).catch(() => {
-        this.$router.push('/login')
+        vm.$router.push('/login')
       })
     },
     getQueryString: function (name) {

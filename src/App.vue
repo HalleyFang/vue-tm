@@ -8,8 +8,7 @@
 
 export default {
   name: 'App',
-  components: {
-  }
+  components: {}
 }
 </script>
 
@@ -23,7 +22,7 @@ export default {
   margin-top: 60px;
 }
 
-body{
+body {
   margin-left: 0px;
 }
 </style>

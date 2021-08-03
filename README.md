@@ -1,4 +1,4 @@
-# vue-tm
+# TestManagement
 
 ## Project setup
 ```
