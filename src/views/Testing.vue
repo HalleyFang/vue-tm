@@ -84,7 +84,7 @@
           </el-form-item>
           <el-form-item label="备注" style="padding-right: 10px">
             <el-input type="textarea" :rows="1" placeholder="请输入内容"
-                      v-model="form.data.case_remark" :value="form.data.case_remark"></el-input>
+                      v-model="form.data.remark" :value="form.data.remark"></el-input>
           </el-form-item>
           <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
             <el-form-item label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
@@ -171,6 +171,9 @@ export default {
       }, {
         value: 4,
         label: '阻塞'
+      }, {
+        value: 5,
+        label: '执行中'
       }],
       caseId: ''
     }

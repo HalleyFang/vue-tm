@@ -52,8 +52,8 @@
 
     <!--工具条-->
     <el-col :span="24" class="toolbar">
-      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="20" :total="total"
-                     style="float:right;">
+      <el-pagination layout="prev, pager, next" @current-change="handleCurrentChange" :page-size="10" :total="total"
+                     style="float:left;">
       </el-pagination>
     </el-col>
 
@@ -125,22 +125,23 @@ export default {
       this.page = val;
       this.getTasks();
     },
-    //获取用户列表
+    //获取任务列表
     getTasks() {
       let para = {
         page: this.page,
+        pageSize: 10,
         label: this.filters.label
       };
       this.listLoading = true;
       //NProgress.start();
       getTaskListByUser(para).then((res) => {
-        let array = res.data;
+        let array = res.data.array;
         if (array.length == 0) {
           this.tasks = null;
         } else {
           this.tasks = array;
         }
-        this.total = this.tasks.length;
+        this.total = res.data.total;
         this.listLoading = false;
         //NProgress.done();
       }).catch(() => {

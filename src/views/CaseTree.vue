@@ -119,7 +119,7 @@
           <el-form-item label="备注" style="padding-right: 10px">
             <!--            <textarea class="el-textarea__inner" rows="1" placeholder="请输入内容"></textarea>-->
             <el-input type="textarea" :rows="1" placeholder="请输入内容"
-                      v-model="form.data.case_remark" :value="form.data.case_remark"></el-input>
+                      v-model="form.data.remark" :value="form.data.remark"></el-input>
           </el-form-item>
           <!--          <el-form-item>
                       <el-button type="primary" @click="onSubmit">保存</el-button>
