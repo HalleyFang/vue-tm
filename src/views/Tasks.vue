@@ -2,9 +2,9 @@
   <section>
     <!--工具条-->
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
-      <el-form :inline="true" :model="filters">
+      <el-form :inline="true" :model="filters" style="float:right;margin-right: 30px">
         <el-form-item>
-          <el-input v-model="filters.label" placeholder="任务ID或任务名称"></el-input>
+          <el-input v-model="filters.label" placeholder="任务ID或任务名称" style="width: 300px"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" v-on:click="getTasks">查询</el-button>
@@ -20,27 +20,27 @@
               style="width: 100%;">
       <!--      <el-table-column type="selection" width="55">
             </el-table-column>-->
-      <el-table-column label="序号" type="index" width="60">
+      <el-table-column label="序号" type="index" >
       </el-table-column>
-      <el-table-column prop="id" label="ID" width="60" sortable>
+      <el-table-column prop="id" label="ID" sortable>
       </el-table-column>
-      <el-table-column prop="label" label="名称" width="120">
+      <el-table-column prop="label" label="名称" width="180">
       </el-table-column>
-      <el-table-column prop="ms" label="MileStone" width="120">
+      <el-table-column prop="ms" label="MileStone" >
       </el-table-column>
-      <el-table-column prop="case_count" label="用例数" width="80">
+      <el-table-column prop="case_count" label="用例数" >
       </el-table-column>
-      <el-table-column label="进度" width="120">
+      <el-table-column label="进度" >
         <template slot-scope="scope">
           <el-progress :percentage="scope.row.status"></el-progress>
         </template>
       </el-table-column>
       <el-table-column prop="executor" label="责任人" width="120">
       </el-table-column>
-      <el-table-column prop="start_date" label="开始时间" width="120" sortable>
+      <el-table-column prop="start_date" label="开始时间"  sortable>
         <template slot-scope="scope">{{ scope.row.start_date | moment }}</template>
       </el-table-column>
-      <el-table-column prop="end_date" label="结束时间" width="120" sortable>
+      <el-table-column prop="end_date" label="结束时间"  sortable>
         <template slot-scope="scope">{{ scope.row.end_date | moment }}</template>
       </el-table-column>
       <el-table-column label="操作" width="360">
@@ -424,7 +424,7 @@ export default {
 
 <style scoped lang="scss">
 
-/*.toolbar {
+.toolbar {
   background: #f2f2f2;
   padding: 10px;
   margin: 10px 0px;
@@ -433,7 +433,7 @@ export default {
     margin-bottom: 10px;
   }
 }
-}*/
+}
 
 </style>
 
