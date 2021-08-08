@@ -5,7 +5,10 @@
                 v-model="node.label"
                 size="mini" maxlength="50">
       </el-input>
-      <span v-if="node.status != 1 && node.status != 2"><i :class="node.icon"></i>{{ node.label }}</span>
+      <span class="tree_label" v-if="node.status != 1 && node.status != 2">
+        <i :class="node.icon" v-if="!node.isAuto"></i>
+        <i :class="node.icon" v-if="node.isAuto" style="color: deepskyblue" ></i>
+        {{ node.label | ellipsis}}</span>
     </span>
     <span v-if="node.status == 1">
                 <el-tooltip class="item" effect="dark" content="保存" placement="top">
@@ -26,6 +29,16 @@
       <i style="margin-left: 8px;" class="el-icon-circle-close"
          @click="CancelEdit"></i>
                 </el-tooltip>
+    </span>
+    <span class="total_auto" v-if="node.status == 0">
+             <span>
+               <i class="el-icon-pie-chart" style="margin-left: 8px;color: goldenrod"></i>
+               {{ node.total }}条
+             </span>
+             <span>
+               <i class="el-icon-setting" style="margin-left: 8px;color: deepskyblue"></i>
+               {{ node.auto }}%
+             </span>
     </span>
     <span class="span_icon">
       <el-tooltip class="item" effect="dark" content="修改名称" placement="top">
@@ -113,12 +126,30 @@ export default {
       },
       deep: true
     }
+  },
+  filters:{
+    ellipsis(value){
+      if (!value) return '';
+      if (value.length > 38) {
+        return value.slice(0,38) + ' ...'
+      }
+      return value
+    }
   }
 }
 </script>
 <style>
 .span_item:hover > .span_icon {
   display: inline;
+}
+
+.span_item:hover > .total_auto {
+  display: none;
+}
+
+.total_auto {
+  margin-left: 10px;
+  font-size: small;
 }
 
 .span_icon {

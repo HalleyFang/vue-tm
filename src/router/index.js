@@ -6,6 +6,7 @@ import Home from "@/views/Home";
 import Tasks from "../views/Tasks";
 import Testing from "@/views/Testing";
 import HomeWithoutMenu from "@/views/HomeWithoutMenu";
+import AutoEcharts from "../views/AutoEcharts";
 
 let routes = [
     {
@@ -49,6 +50,15 @@ let routes = [
             {path: '/tasks', component: Tasks, name: 'Tasks', hidden: true}
         ]
     }, {
+        path: '/',
+        component: Home,
+        name: 'AutomationTest',
+        iconCls: 'el-icon-message',
+        children: [
+            {path: '/autoDashboard', component: AutoEcharts, name: 'AutoEcharts', hidden: true}
+        ]
+    },
+    {
         path: '/',
         component: HomeWithoutMenu,
         name: 'CaseExecute',

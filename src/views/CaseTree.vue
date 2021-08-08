@@ -20,6 +20,20 @@
               </el-button>
             </el-tooltip>
           </div>
+          <div style="margin-top: 10px">
+            <el-tooltip class="item" effect="dark" content="用例总数" placement="top">
+              <span>
+               <i class="el-icon-pie-chart" style="margin-left: 8px;color: goldenrod"></i>
+               {{ this.case.total }}条
+             </span>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="自动化覆盖率" placement="top">
+              <span>
+               <i class="el-icon-setting" style="margin-left: 8px;color: deepskyblue"></i>
+               {{ this.case.auto }}%
+             </span>
+            </el-tooltip>
+          </div>
           <el-tooltip class="item" effect="dark" content="导入" placement="top" style="margin-left: 10px">
             <el-upload
                 class="upload"
@@ -40,7 +54,7 @@
         </div>
         <el-tree
             class="filter-tree"
-            style="overflow:auto;height: 99%;background-color: rgb(238, 241, 246)"
+            style="overflow:auto;height:600px;background-color: rgb(238, 241, 246)"
             :data="treeData"
             :props="defaultProps"
             :filter-node-method="filterNode"
@@ -167,7 +181,11 @@ export default {
       modifyCount: 0,
       isModify: false,
       isShowForm: false,
-      fileList: []
+      fileList: [],
+      case:{
+        total:0,
+        auto:0.00
+      }
     }
   },
   methods: {
@@ -512,10 +530,19 @@ export default {
     },
     beforeRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
+    },
+    getCaseTotal(){
+      axios.get("api/case/caseTotal").then(
+          (resp) => {
+            this.case.total = resp.data.total;
+            this.case.auto = resp.data.auto;
+          }
+      )
     }
   },
   mounted() {
     this.refreshNode();
+    this.getCaseTotal();
     this.rowDrop();
   },
   watch: {

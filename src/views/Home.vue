@@ -35,9 +35,8 @@
               <!--              <el-menu-item index="testing">测试执行</el-menu-item>-->
             </el-submenu>
             <el-submenu index="4">
-              <template slot="title">测试报告</template>
-              <el-menu-item index="/simpleReport">简要报告</el-menu-item>
-              <el-menu-item index="/report">详细报告</el-menu-item>
+              <template slot="title">自动化测试</template>
+              <el-menu-item index="/autoDashboard">自动化看板</el-menu-item>
             </el-submenu>
           </el-menu>
         </el-col>
@@ -66,8 +65,8 @@
                   sysUserName
                 }}</span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>我的消息</el-dropdown-item>
-                <el-dropdown-item>设置</el-dropdown-item>
+<!--                <el-dropdown-item>我的消息</el-dropdown-item>-->
+                <el-dropdown-item divided @click.native="changePwd">修改密码</el-dropdown-item>
                 <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -92,6 +91,24 @@
             </transition>
           </el-col>
         </div>
+
+        <el-dialog title="修改密码" :visible.sync="changePwdFormVisible" :close-on-click-modal="false">
+          <el-form :model="changePwdForm" label-width="80px" ref="editForm">
+            <el-form-item label="原密码" prop="label">
+              <el-input v-model="changePwdForm.oldPass" placeholder="请输入原密码" show-password></el-input>
+            </el-form-item>
+            <el-form-item label="新密码" prop="label">
+              <el-input v-model="changePwdForm.newPass" placeholder="请输入新密码" show-password></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码" prop="label">
+              <el-input v-model="changePwdForm.confirmNewPass" placeholder="请确认新密码" show-password></el-input>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click.native="changePwdFormVisible = false">取消</el-button>
+            <el-button type="primary" @click.native="changePwdSubmit" :loading="changePwdLoading">提交</el-button>
+          </div>
+        </el-dialog>
       </section>
     </el-main>
   </el-container>
@@ -118,7 +135,15 @@ export default {
         resource: '',
         desc: ''
       },
-      isV: ''
+      isV: '',
+      changePwdFormVisible: false,//编辑界面是否显示
+      changePwdLoading: false,
+      //编辑界面数据
+      changePwdForm: {
+        oldPass:'',
+        newPass: '',
+        confirmNewPass:''
+      },
     }
   },
   methods: {
@@ -132,6 +157,39 @@ export default {
       //console.log('handleclose');
     },
     handleselect: function () {
+    },
+    changePwd(){
+      this.changePwdFormVisible = true;
+    },
+    changePwdSubmit: function () {
+      let vm = this;
+      this.$confirm('确认提交吗？', '提示', {}).then(() => {
+        this.changePwdLoading = true;
+        let para = this.changePwdForm;
+        //NProgress.start();
+        axios.post('/api/changePwd',para).then((resp) => {
+          this.changePwdLoading = false;
+          //NProgress.done();
+          if(resp.data.status == 500){
+            vm.changePwdLoading = false;
+            this.$message({
+              message: resp.data.msg,
+              type: 'error'
+            });
+          }else if(resp.status==200 ) {
+            this.$message({
+              message: '密码修改成功',
+              type: 'success'
+            });
+          }else {
+            this.$message({
+              message: '未知错误',
+              type: 'error'
+            });
+          }
+          vm.changePwdLoading = false;
+        });
+      });
     },
     //退出登录
     logout: function () {
