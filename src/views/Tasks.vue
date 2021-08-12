@@ -43,7 +43,7 @@
       <el-table-column prop="end_date" label="结束时间"  sortable>
         <template slot-scope="scope">{{ scope.row.end_date | moment }}</template>
       </el-table-column>
-      <el-table-column label="操作" width="360">
+      <el-table-column label="操作" width="350">
         <template slot-scope="scope">
           <el-button size="small" @click="handleCase(scope.$index, scope.row)">关联用例</el-button>
           <el-button v-if="scope.row.case_count>0" size="small" @click="addRouter(scope.$index, scope.row)">执行测试
@@ -375,7 +375,7 @@ export default {
     },
     //批量删除
     batchRemove: function () {
-      var ids = this.sels.map(item => item.id).toString();
+      var ids = this.sels.map(item => item.id);
       this.$confirm('确认删除选中记录吗？', '提示', {
         type: 'warning'
       }).then(() => {

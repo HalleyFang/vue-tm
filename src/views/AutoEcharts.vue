@@ -11,45 +11,17 @@
           :data="tableData"
           style="width: 100%"
           :header-cell-style="{background:'#CCFFFF',color:'#555'}">
-        <el-table-column
-            prop="execId"
-            label="执行结果编号"
-        >
+        <el-table-column prop="exec_id" label="执行结果编号"></el-table-column>
+        <el-table-column prop="total" label="用例总数"></el-table-column>
+        <el-table-column prop="success" label="成功条数"></el-table-column>
+        <el-table-column prop="failed" label="失败条数"></el-table-column>
+        <el-table-column prop="skip" label="跳过条数"></el-table-column>
+        <el-table-column prop="other" label="其他状态"></el-table-column>
+        <el-table-column prop="min_start_date" label="开始时间">
+          <template slot-scope="scope">{{ scope.row.min_start_date | momentTime }}</template>
         </el-table-column>
-        <el-table-column
-            prop="total"
-            label="用例总数"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="success"
-            label="成功条数"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="failed"
-            label="失败条数"
-        >
-        </el-table-column>
-
-        <el-table-column
-            prop="skip"
-            label="跳过条数"
-        >
-        </el-table-column>
-
-        <el-table-column
-            prop="other"
-            label="其他状态"
-        >
-        </el-table-column>
-        <el-table-column
-            prop="startDate"
-            label="开始时间">
-        </el-table-column>
-        <el-table-column
-            prop="endDate"
-            label="结束时间">
+        <el-table-column prop="max_end_date" label="结束时间">
+          <template slot-scope="scope">{{ scope.row.max_end_date | momentTime }}</template>
         </el-table-column>
       </el-table>
     </el-col>
@@ -178,9 +150,9 @@ export default {
             },
             axisLabel: {
               interval: 0,//横轴信息全部显示
-              textStyle: {
+              /*textStyle: {
                 // color: '#fff'
-              },
+              },*/
               fontSize: 11,
               // rotate:45,//度角倾斜显示
               formatter: function (value) {
@@ -208,9 +180,9 @@ export default {
             },
             axisLabel: {
               show: true,
-              textStyle: {
+              /*textStyle: {
                 // color: '#fff'
-              },
+              },*/
               fontSize: 11,
               interval: 'auto',
               formatter: '{value}'
@@ -238,9 +210,9 @@ export default {
             },
             axisLabel: {
               show: true,
-              textStyle: {
+              /*textStyle: {
                 // color: '#fff'
-              },
+              },*/
               fontSize: 11,
               interval: 'auto',
               formatter: '{value}'
@@ -380,7 +352,7 @@ export default {
             orient: 'vertical',
             autoPlay: true,
             inverse: true,
-            playInterval: 5000,
+            playInterval: 10000,
             left: null,
             right: 0,
             top: 20,
@@ -528,12 +500,7 @@ export default {
       )
     }
   },
-
   mounted: function () {
-    this.drawCharts();
-    this.getRecentExec();
-  },
-  updated: function () {
     this.drawCharts();
     this.getRecentExec();
   }

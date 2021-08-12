@@ -37,7 +37,7 @@
           <el-tooltip class="item" effect="dark" content="导入" placement="top" style="margin-left: 10px">
             <el-upload
                 class="upload"
-                action="/api/case/importExcel"
+                action="/api/tree/importExcel"
                 :on-preview="handlePreview"
                 :on-remove="handleRemove"
                 :before-remove="beforeRemove"
@@ -54,7 +54,7 @@
         </div>
         <el-tree
             class="filter-tree"
-            style="overflow:auto;height:600px;background-color: rgb(238, 241, 246)"
+            style="overflow:auto;height:700px;background-color: rgb(238, 241, 246)"
             :data="treeData"
             :props="defaultProps"
             :filter-node-method="filterNode"
@@ -87,17 +87,17 @@
       <el-main style="padding: 1px">
         <el-form ref="form" :model="form" label-width="80px" @submit.prevent="onSubmit" style="margin:2px;width: 99%">
           <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
-            <el-form-item label="用例编号" style="padding-top: 10px;padding-right: 10px;width: auto">
+            <el-form-item prop="case_id" label="用例编号" style="padding-top: 10px;padding-right: 10px;width: auto">
               <el-input v-model="form.data.case_id" :value="form.data.case_id" :disabled="true"></el-input>
             </el-form-item>
-            <el-form-item label="作者" style="padding-top: 10px;padding-right: 10px;width: auto">
+            <el-form-item prop="create_user" label="作者" style="padding-top: 10px;padding-right: 10px;width: auto">
               <el-input v-model="form.data.create_user" :value="form.data.create_user" :disabled="true"></el-input>
             </el-form-item>
           </el-form>
-          <el-form-item label="用例标题" style="padding-right: 10px">
+          <el-form-item prop="case_name" label="用例标题" style="padding-right: 10px">
             <el-input v-model="form.data.case_name" :value="form.data.case_name"></el-input>
           </el-form-item>
-          <el-form-item label="前置条件" style="padding-right: 10px">
+          <el-form-item prop="case_pre" label="前置条件" style="padding-right: 10px">
             <!--            <textarea class="el-textarea__inner" rows="1" placeholder="请输入内容"></textarea>-->
             <el-input type="textarea" :rows="1" placeholder="请输入内容"
                       v-model="form.data.case_pre" :value="form.data.case_pre"></el-input>
@@ -105,14 +105,14 @@
           <el-form-item label="用例步骤" style="padding-right: 10px;" :model="ruleForm" ref="ruleForm">
             <el-table :data="ruleForm.evidenceTemplateList" stripe border style="width: 100%" size="mini">
               <el-table-column type="index" label="序号" min-width="20" align="center"></el-table-column>
-              <el-table-column label="操作步骤" min-width="50" align="center">
+              <el-table-column prop="step" label="操作步骤" min-width="50" align="center">
                 <template slot-scope="scope">
                   <el-form-item :prop="'evidenceTemplateList.' + scope.$index + '.step'">
                     <el-input v-model="scope.row.step" size="small" :maxlength="30"></el-input>
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column label="预期结果" min-width="50" align="center">
+              <el-table-column prop="expect" label="预期结果" min-width="50" align="center">
                 <template slot-scope="scope">
                   <el-form-item :prop="'evidenceTemplateList.' + scope.$index + '.expect'">
                     <el-input v-model="scope.row.expect" size="small" :maxlength="30"></el-input>
@@ -130,7 +130,7 @@
               </el-table-column>
             </el-table>
           </el-form-item>
-          <el-form-item label="备注" style="padding-right: 10px">
+          <el-form-item prop="remark" label="备注" style="padding-right: 10px">
             <!--            <textarea class="el-textarea__inner" rows="1" placeholder="请输入内容"></textarea>-->
             <el-input type="textarea" :rows="1" placeholder="请输入内容"
                       v-model="form.data.remark" :value="form.data.remark"></el-input>
@@ -139,12 +139,12 @@
                       <el-button type="primary" @click="onSubmit">保存</el-button>
                     </el-form-item>-->
           <el-form :inline="true" style="margin:2px;text-align: left;padding-left: 12px">
-            <el-form-item label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
+            <el-form-item prop="update_date" label="更新时间" style="padding-top: 10px;padding-right: 10px;width: auto">
               <el-date-picker v-model="form.data.update_date" :value="form.data.update_date" type="datetime"
                               format="yyyy-MM-dd HH:mm:ss" value-format="yyyy-MM-dd HH:mm:ss"
                               :disabled="true"></el-date-picker>
             </el-form-item>
-            <el-form-item label="更新人" style="padding-top: 10px;padding-right: 10px;width: auto">
+            <el-form-item prop="update_user" label="更新人" style="padding-top: 10px;padding-right: 10px;width: auto">
               <el-input v-model="form.data.update_user" :value="form.data.update_user" :disabled="true"></el-input>
             </el-form-item>
           </el-form>
@@ -202,9 +202,9 @@ export default {
         isAdd: true
       })
     },
-    refreshNode() {
+    refreshNode: async function() {
       let vm = this;
-      axios.get('/api/tree').then(
+      await axios.get('/api/tree').then(
           (res) => {
             this.treeData = JSON.parse(JSON.stringify(res.data));
           }
@@ -531,8 +531,8 @@ export default {
     beforeRemove(file) {
       return this.$confirm(`确定移除 ${file.name}？`);
     },
-    getCaseTotal(){
-      axios.get("api/case/caseTotal").then(
+    getCaseTotal:function (){
+      axios.get("/api/tree/caseTotal").then(
           (resp) => {
             this.case.total = resp.data.total;
             this.case.auto = resp.data.auto;

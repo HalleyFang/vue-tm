@@ -1,7 +1,7 @@
 <template>
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
            class="demo-ruleForm login-container">
-    <h3 class="title">系统登录</h3>
+    <h3 class="title">TestManagement&nbsp;&nbsp;Login</h3>
     <el-form-item prop="account">
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
     </el-form-item>
@@ -10,7 +10,7 @@
     </el-form-item>
     <el-checkbox v-model="checked" checked class="remember">记住密码</el-checkbox>
     <el-form-item style="width:100%;">
-      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" :loading="logining">登录
+      <el-button type="primary" style="width:100%;" @click.native.prevent="handleSubmit2" @keyup.enter="handleSubmit2" :loading="logining">登录
       </el-button>
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
@@ -75,7 +75,22 @@ export default {
           return false;
         }
       });
+    },
+    // 点击回车键登录
+    keyDown(e) {
+      // 回车则执行登录方法 enter键的ASCII是13
+      if (e.keyCode === 13) {
+        this.handleSubmit2(); // 定义的登录方法
+      }
     }
+  },
+  mounted() {
+    // 绑定监听事件
+    window.addEventListener("keydown", this.keyDown);
+  },
+  destroyed() {
+    // 销毁事件
+    window.removeEventListener("keydown", this.keyDown, false);
   }
 }
 

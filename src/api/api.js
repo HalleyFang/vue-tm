@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Vue from "vue";
+import { showLoading, hideLoading } from '../util/loading';
 
 let base = '/api';
 
@@ -42,6 +43,20 @@ export const caseTask = (params, conf) => {
 
 // 添加请求拦截器
 axios.interceptors.request.use(function (config) {
+    let list = [];
+    list.push('/case/');
+    list.push('/task/listPage');
+    list.push('/taskCase/');
+    let flag = true;
+    for(let i=0;i<list.length;i++){
+        if(!(config.url.indexOf(list[i]) === -1)){
+            flag = false;
+            break;
+        }
+    }
+    if(flag){
+        showLoading();
+    }
     // 在发送请求之前做些什么
     if (window.localStorage.getItem('access-token')) {
         config.headers.Authorization = window.localStorage.getItem('access-token');
@@ -49,12 +64,14 @@ axios.interceptors.request.use(function (config) {
     // console.log(window.localStorage.getItem('access-token'));
     return config
 }, function (error) {
+    hideLoading();
     // 对请求错误做些什么
     return Promise.reject(error)
 });
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
+    hideLoading();
     // 对响应数据做点什么
 
     if (response.status === 401) {
@@ -79,6 +96,7 @@ axios.interceptors.response.use(function (response) {
     }
     return response
 }, function (error) {
+    hideLoading();
     Vue.prototype.$message.error("错误码："+error.response.status);
     if(error.config.url == '/api/auth/login' && error.response.status == 500){
         location.reload();

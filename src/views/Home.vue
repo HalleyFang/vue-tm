@@ -225,13 +225,15 @@ export default {
           }
       );
     },
-    getVersion() {
-      axios.get('/api/userConf/getV').then(
+    getVersion: async function() {
+      let vm = this;
+      await axios.get('/api/userConf/getV').then(
           (resp) => {
             this.isV = resp.data;
           }
-      )
-
+      ).catch(() => {
+        vm.$router.push('/login')
+      })
     }
   },
   mounted() {

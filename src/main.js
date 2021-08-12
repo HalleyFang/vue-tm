@@ -40,6 +40,11 @@ Vue.filter('moment', function (value, formatString) {
     return moment(value).format(formatString);
 });
 
+Vue.filter('momentTime', function (value, formatString) {
+    formatString = formatString || 'YYYY-MM-DD HH:mm:ss';
+    return moment(value).format(formatString);
+});
+
 new Vue({
     router,
     render: h => h(App),
