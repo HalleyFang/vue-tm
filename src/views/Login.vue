@@ -1,6 +1,29 @@
 <template>
+  <div>
+    <div class="login-back">
+    <vue-particles
+        color="#fff"
+        :particleOpacity="0.7"
+        :particlesNumber="60"
+        shapeType="circle"
+        :particleSize="4"
+        linesColor="#fff"
+        :linesWidth="1"
+        :lineLinked="true"
+        :lineOpacity="0.4"
+        :linesDistance="150"
+        :moveSpeed="2"
+        :hoverEffect="true"
+        hoverMode="grab"
+        :clickEffect="true"
+        clickMode="push"
+        class="login-vue-particles"
+        style="height:100%"
+    ></vue-particles>
+  </div>
+  <div class="login">
   <el-form :model="ruleForm2" :rules="rules2" ref="ruleForm2" label-position="left" label-width="0px"
-           class="demo-ruleForm login-container">
+           class="login-container">
     <h3 class="title">TestManagement&nbsp;&nbsp;Login</h3>
     <el-form-item prop="account">
       <el-input type="text" v-model="ruleForm2.account" auto-complete="off" placeholder="账号"></el-input>
@@ -15,6 +38,8 @@
       <!--<el-button @click.native.prevent="handleReset2">重置</el-button>-->
     </el-form-item>
   </el-form>
+  </div>
+  </div>
 </template>
 
 <script>
@@ -103,21 +128,37 @@ export default {
   border-radius: 5px;
   -moz-border-radius: 5px;
   background-clip: padding-box;
-  margin: 180px auto;
+  margin: auto;
   width: 350px;
   padding: 35px 35px 15px 35px;
   background: #fff;
   border: 1px solid #eaeaea;
   box-shadow: 0 0 25px #cac6c6;
+}
 
-  .title {
-    margin: 0px auto 40px auto;
-    text-align: center;
-    color: #505458;
-  }
 
   .remember {
     margin: 0px 0px 35px 0px;
   }
+
+
+.title {
+  margin: 0px auto 40px auto;
+  text-align: center;
+  color: #505458;
+}
+
+.login-back {
+  background-image: linear-gradient(-180deg, #dcf2e6 0%, #0e81a5 100%);
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  position: absolute;
+}
+
+.login {
+  z-index: 1;
+  margin: 180px 0 0 calc(calc(100vw - 410px)/2);
+  position: absolute;
 }
 </style>

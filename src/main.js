@@ -8,12 +8,14 @@ import 'font-awesome/css/font-awesome.min.css'
 import axios from "axios";
 import util from './util/util'
 import moment from 'moment/moment'
+import VueParticles from 'vue-particles'
 
 Vue.use(ElementUI)
 Vue.use(VueRouter)
 Vue.prototype.axios = axios;
 Vue.config.productionTip = false
 Vue.prototype.$utilHelper = util;
+Vue.use(VueParticles)
 
 const router = new VueRouter({
     mode: 'history',
