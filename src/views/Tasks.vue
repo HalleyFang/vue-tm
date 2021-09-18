@@ -4,6 +4,28 @@
     <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
       <el-form :inline="true" :model="filters" style="float:right;margin-right: 30px">
         <el-form-item>
+          <el-select v-model="filters.taskStatus" placeholder="任务状态">
+            <el-option
+                v-for="item in taskStatus"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-select v-model="filters.executor" filterable placeholder="责任人">
+            <el-option label="所有" value="all">
+            </el-option>
+            <el-option
+                v-for="item in executors"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
           <el-input v-model="filters.label" placeholder="任务ID或任务名称" style="width: 300px"></el-input>
         </el-form-item>
         <el-form-item>
@@ -176,7 +198,9 @@ export default {
   data() {
     return {
       filters: {
-        label: ''
+        label: '',
+        taskStatus:'',
+        executor: ''
       },
       tasks: [],
       total: 0,
@@ -210,6 +234,16 @@ export default {
       },
       options: [],
       executors: [],
+      taskStatus: [{
+        value: 'all',
+        label: '所有'
+      },{
+        value: 'running',
+        label: '进行中'
+      },{
+        value: 'complete',
+        label: '已完成'
+      }],
       filterText: '',
       treeData: null,
       runParam: {},
@@ -231,7 +265,9 @@ export default {
       let para = {
         page: this.page,
         pageSize: 10,
-        label: this.filters.label
+        label: this.filters.label,
+        taskStatus: this.filters.taskStatus,
+        executor: this.filters.executor
       };
       this.listLoading = true;
       //NProgress.start();
